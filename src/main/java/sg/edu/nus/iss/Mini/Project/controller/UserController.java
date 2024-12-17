@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import sg.edu.nus.iss.Mini.Project.model.User;
 
@@ -51,5 +52,12 @@ public class UserController {
         }
         model.addAttribute("message", "Invalid username or password");
         return "login";
+    }
+
+    // to see the saved list of usernames and passwords
+    @GetMapping("/all-users")
+    @ResponseBody
+    public List<User> getAllUsers() {
+        return users; 
     }
 }
