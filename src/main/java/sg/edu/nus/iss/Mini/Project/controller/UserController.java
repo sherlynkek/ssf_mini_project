@@ -10,10 +10,16 @@ import sg.edu.nus.iss.Mini.Project.model.User;
 
 
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/user")
 public class UserController {
     
-    @GetMapping("")
+    @GetMapping("/register")
+    public String showRegisterPage(Model model) {
+        
+        return "register";
+    }
+
+    @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("user", new User());
         return "login";
