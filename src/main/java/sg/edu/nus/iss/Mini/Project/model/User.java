@@ -1,12 +1,16 @@
 package sg.edu.nus.iss.Mini.Project.model;
 
-public class UserConcert {
+public class User {
     private String username;
     private String password;
     
-    public UserConcert(String username, String password) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User() {
+        //TODO Auto-generated constructor stub
     }
 
     public String getUsername() {
