@@ -5,21 +5,27 @@ import java.util.Date;
 public class Concert {
     
     // get event details api
+    // image and seatmap optional
     
     private String eventName;
-    private String type;
-    private String venue;
-    private String url;
     private Date date;
-    private Integer price;
+    private String image;
+    private String venueName;
+    private String venueLocation;
+    private String attractionName;
+    private Integer ticketPrice;
+    private String seatMap;
     
-    public Concert(String eventName, String type, String venue, String url, Date date, Integer price) {
+    public Concert(String eventName, Date date, String image, String venueName, String venueLocation,
+            String attractionName, Integer ticketPrice, String seatMap) {
         this.eventName = eventName;
-        this.type = type;
-        this.venue = venue;
-        this.url = url;
         this.date = date;
-        this.price = price;
+        this.image = image;
+        this.venueName = venueName;
+        this.venueLocation = venueLocation;
+        this.attractionName = attractionName;
+        this.ticketPrice = ticketPrice;
+        this.seatMap = seatMap;
     }
 
     public String getEventName() {
@@ -30,30 +36,6 @@ public class Concert {
         this.eventName = eventName;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getVenue() {
-        return venue;
-    }
-
-    public void setVenue(String venue) {
-        this.venue = venue;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -62,17 +44,62 @@ public class Concert {
         this.date = date;
     }
 
-    public Integer getPrice() {
-        return price;
+    public String getImage() {
+        return image;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getVenueName() {
+        return venueName;
+    }
+
+    public void setVenueName(String venueName) {
+        this.venueName = venueName;
+    }
+
+    public String getVenueLocation() {
+        return venueLocation;
+    }
+
+    public void setVenueLocation(String venueLocation) {
+        this.venueLocation = venueLocation;
+    }
+
+    public String getAttractionName() {
+        return attractionName;
+    }
+
+    public void setAttractionName(String attractionName) {
+        this.attractionName = attractionName;
+    }
+
+    public Integer getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(Integer ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public String getSeatMap() {
+        return seatMap;
+    }
+
+    public void setSeatMap(String seatMap) {
+        this.seatMap = seatMap;
     }
 
     @Override
     public String toString() {
-        return eventName + "," + type + "," + venue + "," + url + "," + date + "," + price;
+        return eventName + "," + date + "," + image + "," + venueName
+                + "," + venueLocation + "," + attractionName + ","
+                + ticketPrice + "," + seatMap;
     }
+
+    
+    
     
 }
