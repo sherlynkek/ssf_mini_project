@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public class MapRepo {
     
     @Autowired
-    @Qualifier("String-String")
+    @Qualifier("template")
     RedisTemplate<String, String> redisTemplate;
 
     // day 15: slide 36

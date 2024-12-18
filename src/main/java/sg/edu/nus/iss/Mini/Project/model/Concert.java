@@ -14,18 +14,20 @@ public class Concert {
     private String venueName;
     private String venueUrl;
     private String attractionName;
-    private Integer ticketPrice;
+    private Double ticketPriceLow;
+    private Double ticketPriceHigh;
     // private String seatMap;
-    
+
     public Concert(String eventName, Date date, String imageUrl, String venueName, String venueUrl,
-            String attractionName, Integer ticketPrice) {
+            String attractionName, Double ticketPriceLow, Double ticketPriceHigh) {
         this.eventName = eventName;
         this.date = date;
         this.imageUrl = imageUrl;
         this.venueName = venueName;
         this.venueUrl = venueUrl;
         this.attractionName = attractionName;
-        this.ticketPrice = ticketPrice;
+        this.ticketPriceLow = ticketPriceLow;
+        this.ticketPriceHigh = ticketPriceHigh;
         // this.seatMap = seatMap;
     }
 
@@ -81,12 +83,20 @@ public class Concert {
         this.attractionName = attractionName;
     }
 
-    public Integer getTicketPrice() {
-        return ticketPrice;
+    public Double getTicketPriceLow() {
+        return ticketPriceLow;
     }
 
-    public void setTicketPrice(Integer ticketPrice) {
-        this.ticketPrice = ticketPrice;
+    public void setTicketPriceLow(Double ticketPriceLow) {
+        this.ticketPriceLow = ticketPriceLow;
+    }
+
+    public Double getTicketPriceHigh() {
+        return ticketPriceHigh;
+    }
+
+    public void setTicketPriceHigh(Double ticketPriceHigh) {
+        this.ticketPriceHigh = ticketPriceHigh;
     }
 
     // public String getSeatMap() {
@@ -97,11 +107,13 @@ public class Concert {
     //     this.seatMap = seatMap;
     // }
 
+    
+
     @Override
     public String toString() {
-        return eventName + "," + date + "," + imageUrl + "," + venueName
-                + "," + venueUrl + "," + attractionName + ","
-                + ticketPrice;
+        return eventName + "," + date + "," + imageUrl + ","
+                + venueName + "," + venueUrl + "," + attractionName + ","
+                + ticketPriceLow + "," + ticketPriceHigh ;
     }
 
     

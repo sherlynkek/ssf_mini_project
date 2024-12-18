@@ -24,12 +24,11 @@ public class RedisConfig {
     private String redisPassword;
 
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory(){
+    public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration rsc = new RedisStandaloneConfiguration();
         rsc.setHostName(redisHost);
         rsc.setPort(redisPort);
-
-        if(redisUsername.trim().length() > 0){
+        if (redisUsername.trim().length() > 0) {
             rsc.setUsername(redisUsername);
             rsc.setPassword(redisPassword);
         }
@@ -41,13 +40,13 @@ public class RedisConfig {
         return jcf;
     }
 
-    @Bean("template01")
-    public RedisTemplate<String, String> redisObjectTemplate01(){
+    @Bean("template")
+    public RedisTemplate<String, String> redisObjectTemplate() {
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new StringRedisSerializer());
-
         return template;
     }
+    
 }
