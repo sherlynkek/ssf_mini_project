@@ -5,27 +5,28 @@ import java.util.Date;
 public class Concert {
     
     // get event details api
-    // image and seatmap optional
+    // image url keep 
+    // seatmap to be considered after everything is done
     
     private String eventName;
     private Date date;
-    private String image;
+    private String imageUrl;
     private String venueName;
     private String venueLocation;
     private String attractionName;
     private Integer ticketPrice;
-    private String seatMap;
+    // private String seatMap;
     
-    public Concert(String eventName, Date date, String image, String venueName, String venueLocation,
-            String attractionName, Integer ticketPrice, String seatMap) {
+    public Concert(String eventName, Date date, String imageUrl, String venueName, String venueLocation,
+            String attractionName, Integer ticketPrice) {
         this.eventName = eventName;
         this.date = date;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.venueName = venueName;
         this.venueLocation = venueLocation;
         this.attractionName = attractionName;
         this.ticketPrice = ticketPrice;
-        this.seatMap = seatMap;
+        // this.seatMap = seatMap;
     }
 
     public String getEventName() {
@@ -44,12 +45,12 @@ public class Concert {
         this.date = date;
     }
 
-    public String getImage() {
-        return image;
+    public String getimageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setimageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getVenueName() {
@@ -84,19 +85,19 @@ public class Concert {
         this.ticketPrice = ticketPrice;
     }
 
-    public String getSeatMap() {
-        return seatMap;
-    }
+    // public String getSeatMap() {
+    //     return seatMap;
+    // }
 
-    public void setSeatMap(String seatMap) {
-        this.seatMap = seatMap;
-    }
+    // public void setSeatMap(String seatMap) {
+    //     this.seatMap = seatMap;
+    // }
 
     @Override
     public String toString() {
-        return eventName + "," + date + "," + image + "," + venueName
+        return eventName + "," + date + "," + imageUrl + "," + venueName
                 + "," + venueLocation + "," + attractionName + ","
-                + ticketPrice + "," + seatMap;
+                + ticketPrice;
     }
 
     
