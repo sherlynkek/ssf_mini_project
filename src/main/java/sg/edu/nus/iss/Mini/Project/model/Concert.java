@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Concert {
     
-    // get event details api
+    // get event (classification = music) details api
     // image url keep 
     // seatmap to be considered after everything is done
     
@@ -12,21 +12,25 @@ public class Concert {
     private Date date;
     private String imageUrl;
     private String venueName;
-    private String venueLocation;
+    private String venueUrl;
     private String attractionName;
     private Integer ticketPrice;
     // private String seatMap;
     
-    public Concert(String eventName, Date date, String imageUrl, String venueName, String venueLocation,
+    public Concert(String eventName, Date date, String imageUrl, String venueName, String venueUrl,
             String attractionName, Integer ticketPrice) {
         this.eventName = eventName;
         this.date = date;
         this.imageUrl = imageUrl;
         this.venueName = venueName;
-        this.venueLocation = venueLocation;
+        this.venueUrl = venueUrl;
         this.attractionName = attractionName;
         this.ticketPrice = ticketPrice;
         // this.seatMap = seatMap;
+    }
+
+    public Concert() {
+        //TODO Auto-generated constructor stub
     }
 
     public String getEventName() {
@@ -45,11 +49,11 @@ public class Concert {
         this.date = date;
     }
 
-    public String getimageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setimageUrl(String imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -61,12 +65,12 @@ public class Concert {
         this.venueName = venueName;
     }
 
-    public String getVenueLocation() {
-        return venueLocation;
+    public String getVenueUrl() {
+        return venueUrl;
     }
 
-    public void setVenueLocation(String venueLocation) {
-        this.venueLocation = venueLocation;
+    public void setVenueUrl(String venueUrl) {
+        this.venueUrl = venueUrl;
     }
 
     public String getAttractionName() {
@@ -96,7 +100,7 @@ public class Concert {
     @Override
     public String toString() {
         return eventName + "," + date + "," + imageUrl + "," + venueName
-                + "," + venueLocation + "," + attractionName + ","
+                + "," + venueUrl + "," + attractionName + ","
                 + ticketPrice;
     }
 

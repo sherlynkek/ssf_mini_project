@@ -11,6 +11,7 @@ public class ConcertController {
     
     @GetMapping("")
     public String getAllEvent(Model model) {
+        
         return "event";
     }
 }
