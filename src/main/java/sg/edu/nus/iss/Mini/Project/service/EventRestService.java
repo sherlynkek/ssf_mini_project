@@ -48,6 +48,7 @@ public class EventRestService {
             JsonObject jObjectRecord = jArray.getJsonObject(i);
 
             // image array and object
+            
             JsonArray jArrayImage = jObjectRecord.getJsonArray("images");
             JsonObject jObjectImage = jArrayImage.getJsonObject(0);
             String imageURL = jObjectImage.getString("url"); 

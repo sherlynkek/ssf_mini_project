@@ -124,9 +124,5 @@ public class Event {
                 + ticketPriceLow + "," + ticketPriceHigh + "," + ticketUrl;
     }
 
-   
-
-    
-    
     
 }

@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import sg.edu.nus.iss.Mini.Project.model.User;
 
-
-
 @Controller
 @RequestMapping("/user")
 public class UserController {
