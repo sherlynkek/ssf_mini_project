@@ -6,7 +6,7 @@ public class Event {
     
     // get all event details api
     // seatmap to be considered after everything is done
-    
+    private String id;
     private String eventName;
     private Date date;
     private String imageUrl;
@@ -19,9 +19,10 @@ public class Event {
     private String ticketUrl;
     // private String seatMap;    
 
-    public Event(String eventName, Date date, String imageUrl, String venueName, 
-            String venueUrl, String attractionName, String classificationName, 
-            Double ticketPriceLow, Double ticketPriceHigh, String ticketUrl) {
+    public Event(String id, String eventName, Date date, String imageUrl, String venueName, String venueUrl,
+            String attractionName, String classificationName, Double ticketPriceLow, Double ticketPriceHigh,
+            String ticketUrl) {
+        this.id = id;
         this.eventName = eventName;
         this.date = date;
         this.imageUrl = imageUrl;
@@ -34,12 +35,18 @@ public class Event {
         this.ticketUrl = ticketUrl;
         // this.seatMap = seatMap;
     }
-
-
+ 
     public Event() {
         //TODO Auto-generated constructor stub
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getEventName() {
         return eventName;
     }

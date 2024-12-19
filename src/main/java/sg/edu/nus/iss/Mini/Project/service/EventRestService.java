@@ -59,12 +59,9 @@ public class EventRestService {
         
             // classification
             JsonArray jArrayClass = jObjectRecord.getJsonArray("classifications");
-            String classType = null;
-            if(jArrayClass != null && !jArrayClass.isEmpty()) {
-                JsonObject jObjectClass = jArrayClass.getJsonObject(0);
-                JsonObject jObjectClassified = jObjectClass.getJsonObject("segment");
-                classType = jObjectClassified.getString("name");
-            }
+            JsonObject jObjectClass = jArrayClass.getJsonObject(0);
+            JsonObject jObjectClassified = jObjectClass.getJsonObject("segment");
+            String classType = jObjectClassified.getString("name");
 
             // ticketing price range (low and high)
             JsonArray jArrayTix = jObjectRecord.getJsonArray("priceRanges");
@@ -88,22 +85,18 @@ public class EventRestService {
                 JsonArray jArrayVenue = jsonObjectVenue.getJsonArray("venues");
                 if(jArrayVenue != null) {
                     JsonObject jObjectVenue = jArrayVenue.getJsonObject(0);
-                    venueName = jObjectVenue.getString("name", "Unknown Venue");
+                    venueName = jObjectVenue.getString("name");
                     venueURL = jObjectVenue.getString("url", "No url provided");
                 }
             }
                               
             // attraction
-            String attractName = null;
-            if(jsonObjectVenue != null) {
-                JsonArray jArrayAttract = jsonObjectVenue.getJsonArray("attractions");
-                if(jArrayAttract != null) {
-                    JsonObject jObjectAttract = jArrayAttract.getJsonObject(0);
-                    attractName = jObjectAttract.getString("name", "Unknown Attraction");
-                }
-            }
+            JsonArray jArrayAttract = jsonObjectVenue.getJsonArray("attractions");
+            JsonObject jObjectAttract = jArrayAttract.getJsonObject(0);
+            String attractName = jObjectAttract.getString("name");
 
             Event events = new Event();
+            events.setId(jObjectRecord.getString("id"));
             events.setEventName(jObjectRecord.getString("name"));
             events.setTicketUrl(jObjectRecord.getString("url"));
             events.setDate(Date.valueOf(localDate));
@@ -118,6 +111,11 @@ public class EventRestService {
             event.add(events);
         } 
         return event;
+    }
+
+    public Event getEventById(String id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEventById'");
     }
     
 }

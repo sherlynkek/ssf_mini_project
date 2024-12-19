@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import sg.edu.nus.iss.Mini.Project.model.Event;
 import sg.edu.nus.iss.Mini.Project.service.EventRestService;
 
 @Controller
@@ -27,8 +29,10 @@ public class EventController {
         return "eventHome";
     }
 
-    @GetMapping("/eventName")
-    public String showEventPage(Model model) {
-        return "eventName";
+    @GetMapping("/{id}")
+    public String getEventDetail(String id, Model model) {
+        Event event = eventRestService.getEventById(id);
+        model.addAttribute("event", event);
+        return "eventDetail";
     }
 }
