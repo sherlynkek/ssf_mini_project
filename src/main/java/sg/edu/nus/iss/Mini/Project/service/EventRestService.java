@@ -58,7 +58,7 @@ public class EventRestService {
             String localDate = jObjectDates.getString("localDate");
         
             // classification
-            JsonArray jArrayClass = jObjectRecord.getJsonArray("classification");
+            JsonArray jArrayClass = jObjectRecord.getJsonArray("classifications");
             String classType = null;
             if(jArrayClass != null && !jArrayClass.isEmpty()) {
                 JsonObject jObjectClass = jArrayClass.getJsonObject(0);
