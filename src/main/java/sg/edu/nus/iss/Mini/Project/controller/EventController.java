@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/event")
-public class ConcertController {
+public class EventController {
     
     @GetMapping("")
     public String getAllEvent(Model model) {

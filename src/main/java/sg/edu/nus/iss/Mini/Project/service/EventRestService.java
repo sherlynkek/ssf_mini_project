@@ -12,15 +12,14 @@ import org.springframework.web.client.RestTemplate;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
-import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
-import sg.edu.nus.iss.Mini.Project.model.Concert;
+import sg.edu.nus.iss.Mini.Project.model.Event;
 import sg.edu.nus.iss.Mini.Project.repo.MapRepo;
 import sg.edu.nus.iss.Mini.Project.util.Utility;
 
 @Service
-public class ConcertRestService {
+public class EventRestService {
     @Value("${spring.data.api}")
     private String apiKey;
 
@@ -29,17 +28,17 @@ public class ConcertRestService {
 
     RestTemplate template = new RestTemplate();
     
-    public List<Concert> getAllConcert() {
+    public List<Event> getAllEvent() {
         
-        List<Concert> concert = new ArrayList<>();
-        System.out.println(Utility.concertUrl);
+        List<Event> event = new ArrayList<>();
+        // System.out.println(Utility.eventUrl);
 
-        String url = Utility.concertUrl + apiKey;
-        System.out.println(url); 
+        String url = Utility.eventUrl + apiKey;
+        // System.out.println(url); 
 
-        String concertData = template.getForObject(url, String.class);
+        String eventData = template.getForObject(url, String.class);
 
-        JsonReader reader = Json.createReader(new StringReader(concertData));
+        JsonReader reader = Json.createReader(new StringReader(eventData));
         JsonObject jObject = reader.readObject();
 
         JsonObject jObjectResult = jObject.getJsonObject("_embedded");
@@ -84,24 +83,24 @@ public class ConcertRestService {
                 priceHigh = jObjectTix.getJsonNumber("max").doubleValue();
             }
 
-            Concert concerts = new Concert();
-            concerts.setEventName(jObjectRecord.getString("name"));
+            Event events = new Event();
+            events.setEventName(jObjectRecord.getString("name"));
 
-            concerts.setDate(Date.valueOf(localDate));
+            events.setDate(Date.valueOf(localDate));
 
-            concerts.setImageUrl(imageURL);
+            events.setImageUrl(imageURL);
 
-            concerts.setVenueName(venueName);
-            concerts.setVenueUrl(venueURL);
+            events.setVenueName(venueName);
+            events.setVenueUrl(venueURL);
 
-            concerts.setAttractionName(attractName);
-            concerts.setTicketPriceLow(priceLow);
-            concerts.setTicketPriceHigh(priceHigh);
+            events.setAttractionName(attractName);
+            events.setTicketPriceLow(priceLow);
+            events.setTicketPriceHigh(priceHigh);
 
-            concert.add(concerts);
+            event.add(events);
         }
         
-        return concert;
+        return event;
     }
     
 }

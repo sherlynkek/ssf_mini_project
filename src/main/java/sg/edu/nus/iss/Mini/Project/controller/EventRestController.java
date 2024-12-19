@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import sg.edu.nus.iss.Mini.Project.model.Concert;
-import sg.edu.nus.iss.Mini.Project.service.ConcertRestService;
+import sg.edu.nus.iss.Mini.Project.model.Event;
+import sg.edu.nus.iss.Mini.Project.service.EventRestService;
 
 @RestController
-@RequestMapping("/api/concert")
-public class ConcertRestController {
+@RequestMapping("/api/event")
+public class EventRestController {
     
     @Autowired
-    ConcertRestService concertRestService;
+    EventRestService eventRestService;
     
     @GetMapping("")
-    public ResponseEntity<List<Concert>> getAllConcert() {
-        List<Concert> concert = concertRestService.getAllConcert();
+    public ResponseEntity<List<Event>> getAllEvent() {
+        List<Event> event = eventRestService.getAllEvent();
         
-        return ResponseEntity.ok().body(concert);
+        return ResponseEntity.ok().body(event);
     }
 }

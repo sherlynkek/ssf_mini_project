@@ -2,7 +2,7 @@ package sg.edu.nus.iss.Mini.Project.model;
 
 import java.util.Date;
 
-public class Concert {
+public class Event {
     
     // get event (classification = music) details api
     // image url keep 
@@ -16,10 +16,11 @@ public class Concert {
     private String attractionName;
     private Double ticketPriceLow;
     private Double ticketPriceHigh;
+    private String ticketUrl;
     // private String seatMap;
-
-    public Concert(String eventName, Date date, String imageUrl, String venueName, String venueUrl,
-            String attractionName, Double ticketPriceLow, Double ticketPriceHigh) {
+    
+    public Event(String eventName, Date date, String imageUrl, String venueName, String venueUrl, String attractionName,
+            Double ticketPriceLow, Double ticketPriceHigh, String ticketUrl) {
         this.eventName = eventName;
         this.date = date;
         this.imageUrl = imageUrl;
@@ -28,10 +29,11 @@ public class Concert {
         this.attractionName = attractionName;
         this.ticketPriceLow = ticketPriceLow;
         this.ticketPriceHigh = ticketPriceHigh;
+        this.ticketUrl = ticketUrl;
         // this.seatMap = seatMap;
     }
 
-    public Concert() {
+    public Event() {
         //TODO Auto-generated constructor stub
     }
 
@@ -99,6 +101,14 @@ public class Concert {
         this.ticketPriceHigh = ticketPriceHigh;
     }
 
+    public String getTicketUrl() {
+        return ticketUrl;
+    }
+
+    public void setTicketUrl(String ticketUrl) {
+        this.ticketUrl = ticketUrl;
+    }
+
     // public String getSeatMap() {
     //     return seatMap;
     // }
@@ -107,14 +117,14 @@ public class Concert {
     //     this.seatMap = seatMap;
     // }
 
-    
-
     @Override
     public String toString() {
         return eventName + "," + date + "," + imageUrl + ","
                 + venueName + "," + venueUrl + "," + attractionName + ","
-                + ticketPriceLow + "," + ticketPriceHigh ;
+                + ticketPriceLow + "," + ticketPriceHigh + "," + ticketUrl;
     }
+
+   
 
     
     
