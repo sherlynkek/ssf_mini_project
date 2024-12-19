@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Event {
     
-    // get event (classification = music) details api
+    // get all event details api
     // image url keep 
     // seatmap to be considered after everything is done
     
