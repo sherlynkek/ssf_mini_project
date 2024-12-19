@@ -85,6 +85,7 @@ public class EventRestService {
 
             Event events = new Event();
             events.setEventName(jObjectRecord.getString("name"));
+            events.setTicketUrl(jObjectRecord.getString("url"));
 
             events.setDate(Date.valueOf(localDate));
 
