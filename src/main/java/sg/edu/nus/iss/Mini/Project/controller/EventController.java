@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import sg.edu.nus.iss.Mini.Project.model.Event;
 import sg.edu.nus.iss.Mini.Project.service.EventRestService;
 
 @Controller

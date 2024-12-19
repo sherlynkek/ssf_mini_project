@@ -5,7 +5,6 @@ import java.util.Date;
 public class Event {
     
     // get all event details api
-    // image url keep 
     // seatmap to be considered after everything is done
     
     private String eventName;
@@ -14,12 +13,14 @@ public class Event {
     private String venueName;
     private String venueUrl;
     private String attractionName;
+    private String classificationName;
     private Double ticketPriceLow;
     private Double ticketPriceHigh;
     private String ticketUrl;
-    // private String seatMap;
-    
-    public Event(String eventName, Date date, String imageUrl, String venueName, String venueUrl, String attractionName,
+    // private String seatMap;    
+
+    public Event(String eventName, Date date, String imageUrl, String venueName, 
+            String venueUrl, String attractionName, String classificationName, 
             Double ticketPriceLow, Double ticketPriceHigh, String ticketUrl) {
         this.eventName = eventName;
         this.date = date;
@@ -27,11 +28,13 @@ public class Event {
         this.venueName = venueName;
         this.venueUrl = venueUrl;
         this.attractionName = attractionName;
+        this.classificationName = classificationName;
         this.ticketPriceLow = ticketPriceLow;
         this.ticketPriceHigh = ticketPriceHigh;
         this.ticketUrl = ticketUrl;
         // this.seatMap = seatMap;
     }
+
 
     public Event() {
         //TODO Auto-generated constructor stub
@@ -109,6 +112,16 @@ public class Event {
         this.ticketUrl = ticketUrl;
     }
 
+    public String getClassificationName() {
+        return classificationName;
+    }
+
+
+    public void setClassificationName(String classificationName) {
+        this.classificationName = classificationName;
+    }
+
+
     // public String getSeatMap() {
     //     return seatMap;
     // }
@@ -120,8 +133,8 @@ public class Event {
     @Override
     public String toString() {
         return eventName + "," + date + "," + imageUrl + ","
-                + venueName + "," + venueUrl + "," + attractionName + ","
-                + ticketPriceLow + "," + ticketPriceHigh + "," + ticketUrl;
+                + venueName + "," + venueUrl + "," + attractionName + "," + classificationName
+                + "," + ticketPriceLow + "," + ticketPriceHigh + "," + ticketUrl;
     }
 
     

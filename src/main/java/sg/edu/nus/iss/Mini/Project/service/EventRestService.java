@@ -47,28 +47,24 @@ public class EventRestService {
         for(int i = 0; i < jArray.size(); i++) {
             JsonObject jObjectRecord = jArray.getJsonObject(i);
 
-            // image array and object
-            
+           // image
             JsonArray jArrayImage = jObjectRecord.getJsonArray("images");
             JsonObject jObjectImage = jArrayImage.getJsonObject(0);
-            String imageURL = jObjectImage.getString("url"); 
+            String imageURL = jObjectImage.getString("url");
 
-            // date array and object
+            // date
             JsonObject jObjectDate = jObjectRecord.getJsonObject("dates");
             JsonObject jObjectDates = jObjectDate.getJsonObject("start");
             String localDate = jObjectDates.getString("localDate");
-
-            // venue array and object
-            JsonObject jsonObjectVenue = jObjectRecord.getJsonObject("_embedded");
-            JsonArray jArrayVenue = jsonObjectVenue.getJsonArray("venues");
-            JsonObject jObjectVenue = jArrayVenue.getJsonObject(0);
-            String venueName = jObjectVenue.getString("name");
-            String venueURL = jObjectVenue.getString("url");
-
-            // attraction array
-            JsonArray jArrayAttract = jsonObjectVenue.getJsonArray("attractions");
-            JsonObject jObjectAttract = jArrayAttract.getJsonObject(0);
-            String attractName = jObjectAttract.getString("name");
+        
+            // classification
+            JsonArray jArrayClass = jObjectRecord.getJsonArray("classification");
+            String classType = null;
+            if(jArrayClass != null && !jArrayClass.isEmpty()) {
+                JsonObject jObjectClass = jArrayClass.getJsonObject(0);
+                JsonObject jObjectClassified = jObjectClass.getJsonObject("segment");
+                classType = jObjectClassified.getString("name");
+            }
 
             // ticketing price range (low and high)
             JsonArray jArrayTix = jObjectRecord.getJsonArray("priceRanges");
@@ -84,24 +80,43 @@ public class EventRestService {
                 priceHigh = jObjectTix.getJsonNumber("max").doubleValue();
             }
 
+            // venue 
+            JsonObject jsonObjectVenue = jObjectRecord.getJsonObject("_embedded");
+            String venueName = null;
+            String venueURL = null;
+            if(jsonObjectVenue != null) {
+                JsonArray jArrayVenue = jsonObjectVenue.getJsonArray("venues");
+                if(jArrayVenue != null) {
+                    JsonObject jObjectVenue = jArrayVenue.getJsonObject(0);
+                    venueName = jObjectVenue.getString("name", "Unknown Venue");
+                    venueURL = jObjectVenue.getString("url", "No url provided");
+                }
+            }
+                              
+            // attraction
+            String attractName = null;
+            if(jsonObjectVenue != null) {
+                JsonArray jArrayAttract = jsonObjectVenue.getJsonArray("attractions");
+                if(jArrayAttract != null) {
+                    JsonObject jObjectAttract = jArrayAttract.getJsonObject(0);
+                    attractName = jObjectAttract.getString("name", "Unknown Attraction");
+                }
+            }
+
             Event events = new Event();
             events.setEventName(jObjectRecord.getString("name"));
             events.setTicketUrl(jObjectRecord.getString("url"));
-
             events.setDate(Date.valueOf(localDate));
-
             events.setImageUrl(imageURL);
-
             events.setVenueName(venueName);
             events.setVenueUrl(venueURL);
-
             events.setAttractionName(attractName);
             events.setTicketPriceLow(priceLow);
             events.setTicketPriceHigh(priceHigh);
+            events.setClassificationName(classType);
 
             event.add(events);
-        }
-        
+        } 
         return event;
     }
     
