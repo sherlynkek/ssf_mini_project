@@ -17,7 +17,10 @@
     </a>
     <br><br>
     <span th:each="event : ${eventsList}">
-        <img th:src="${event.imageUrl}" width="100" height="100">
+        <a href="/event/eventName">
+            <img th:src="${event.imageUrl}" width="100" height="100">
+            <button type="button"></button>
+        </a>
         <p th:utext="${event.eventName}"></p>
     </span>
     

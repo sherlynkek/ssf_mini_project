@@ -28,8 +28,8 @@ public class EventController {
         return "eventHome";
     }
 
-    @GetMapping("/{eventName}")
+    @GetMapping("/eventName")
     public String showEventPage(Model model) {
-        return null;
+        return "eventName";
     }
 }
