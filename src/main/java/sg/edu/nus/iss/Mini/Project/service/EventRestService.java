@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -113,9 +115,18 @@ public class EventRestService {
         return event;
     }
 
-    public Event getEventById(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEventById'");
-    }
+    // public String getEventById(String id) {
+    //     String idUrl = Utility.eventUrl + id;
+    //     return idUrl;
+    // }
     
+    public String getEventFromId(String id) {
+        String url = UriComponentsBuilder
+        .fromUriString(Utility.eventIdUrl)
+        .queryParam("id", id)
+        .queryParam("apikey", apiKey)
+        .toUriString();
+        
+        return url;
+    }
 }

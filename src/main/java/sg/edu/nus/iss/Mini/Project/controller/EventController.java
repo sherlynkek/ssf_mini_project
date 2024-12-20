@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.Mini.Project.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,9 +32,13 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public String getEventDetail(String id, Model model) {
-        Event event = eventRestService.getEventById(id);
-        model.addAttribute("event", event);
+    public String getEventDetail(@PathVariable("id") String id, Model model) {
+
+        String events = eventRestService.getEventFromId(id);
+        model.addAttribute("event", events);
+
+        
+
         return "eventDetail";
     }
 }
