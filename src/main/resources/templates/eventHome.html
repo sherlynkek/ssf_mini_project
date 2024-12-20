@@ -20,8 +20,9 @@
     <div class="container">
         <span th:each="event : ${eventsList}">
             <a th:href="@{/event/{eventId}(eventId=${event.id})}">
-                <img th:src="${event.imageUrl}" width="100" height="100">
-                <button type="button"></button>
+                <button type="button">
+                    <img th:src="${event.imageUrl}" width="100" height="100">
+                </button>
             </a>
             <p th:utext="${event.eventName}"></p>
         </span>

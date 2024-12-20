@@ -22,22 +22,15 @@ public class EventController {
     @GetMapping("/home")
     public String showEventHomePage(Model model) {
         model.addAttribute("eventsList", eventRestService.getAllEvent());
-        // Event event = eventRestService.getAllEvent().get(0);
-        // model.addAttribute("event", event);
-        // for(int i = 0; i<eventRestService.getAllEvent().size(); i++){
-        //     System.out.println(eventRestService.getAllEvent().get(i).getImageUrl());
-        // }
-        
+   
         return "eventHome";
     }
 
     @GetMapping("/{id}")
     public String getEventDetail(@PathVariable("id") String id, Model model) {
 
-        String events = eventRestService.getEventFromId(id);
+        Event events = eventRestService.getEventFromId(id);
         model.addAttribute("event", events);
-
-        
 
         return "eventDetail";
     }

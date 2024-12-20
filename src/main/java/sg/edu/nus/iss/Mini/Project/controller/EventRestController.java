@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import sg.edu.nus.iss.Mini.Project.model.Event;
 import sg.edu.nus.iss.Mini.Project.service.EventRestService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/event")
@@ -18,10 +20,17 @@ public class EventRestController {
     @Autowired
     EventRestService eventRestService;
     
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<List<Event>> getAllEvent() {
         List<Event> event = eventRestService.getAllEvent();
         
         return ResponseEntity.ok().body(event);
     }
+
+    // @GetMapping("")
+    // public ResponseEntity res() {
+    //     eventRestService.getEventFromId("G5dIZb8kECzK3");
+    //     return ResponseEntity.ok().body(eventRestService.getEventFromId("G5dIZb8kECzK3")).getBody();
+    // }
+    
 }
