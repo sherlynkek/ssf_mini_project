@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import sg.edu.nus.iss.Mini.Project.model.Event;
 import sg.edu.nus.iss.Mini.Project.service.EventRestService;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController

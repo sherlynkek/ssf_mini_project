@@ -3,7 +3,6 @@ package sg.edu.nus.iss.Mini.Project.service;
 import java.io.StringReader;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,13 +127,11 @@ public class EventRestService {
         .queryParam("apikey", apiKey)
         .build(id)
         .toString();
-        System.out.println(url);
+        // System.out.println(url);
         
         ResponseEntity<String> res = template.getForEntity(url, String.class);
         JsonReader reader = Json.createReader(new StringReader(res.getBody()));
         JsonObject jObject = reader.readObject();
-
-        String name = jObject.getString("name");
         
         // image
         JsonArray jArrayImage = jObject.getJsonArray("images");
