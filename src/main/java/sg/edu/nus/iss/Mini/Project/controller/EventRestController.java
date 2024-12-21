@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import sg.edu.nus.iss.Mini.Project.model.Event;
-import sg.edu.nus.iss.Mini.Project.service.EventRestService;
+import sg.edu.nus.iss.Mini.Project.service.EventService;
 
 
 @RestController
@@ -17,11 +17,11 @@ import sg.edu.nus.iss.Mini.Project.service.EventRestService;
 public class EventRestController {
     
     @Autowired
-    EventRestService eventRestService;
+    EventService eventService;
     
     @GetMapping("/all")
     public ResponseEntity<List<Event>> getAllEvent() {
-        List<Event> event = eventRestService.getAllEvent();
+        List<Event> event = eventService.getAllEvent();
         
         return ResponseEntity.ok().body(event);
     }
