@@ -2,6 +2,7 @@ package sg.edu.nus.iss.Mini.Project.service;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,26 +57,56 @@ public class EventFilterService {
             JsonObject jObjectClassified = jObjectClass.getJsonObject("segment");
             String classType = jObjectClassified.getString("name");
 
+            // ticketing price range (low and high)
+            JsonArray jArrayTix = jObjectRecord.getJsonArray("priceRanges");
+            Double priceLow = null;
+            Double priceHigh = null;
+            if(jArrayTix != null && !jArrayTix.isEmpty()) {
+                JsonObject jObjectTix = jArrayTix.getJsonObject(0);
+                priceLow = jObjectTix.getJsonNumber("min").doubleValue();
+                priceHigh = jObjectTix.getJsonNumber("max").doubleValue();
+            }
+
             Event events = new Event();
  
             events.setEventName(jObjectRecord.getString("name"));
             events.setImageUrl(imageURL);
             events.setClassificationName(classType);
+            events.setTicketPriceHigh(priceHigh);
+            events.setTicketPriceLow(priceLow);
 
         // Apply filters
-        boolean matchesFilter = true;
+        // boolean matchesFilter = true;
 
         // Filter by classification (classType)
         if (classification != null && !classification.isEmpty() && !classType.equalsIgnoreCase(classification)) {
-            matchesFilter = false;
+            event.add(events);
+            // matchesFilter = false;
         }
 
+        // Apply sorting
+        /* if (sortOption != null && !sortOption.isEmpty()) {
+            switch (sortOption.toLowerCase()) {
+                case "price-low-high":
+                    event.sort(Comparator.comparing(Event::getTicketPriceLow, Comparator.nullsLast(Comparator.naturalOrder())));
+                    break;
+                case "price-high-low":
+                    event.sort(Comparator.comparing(Event::getTicketPriceLow, Comparator.nullsLast(Comparator.reverseOrder())));
+                    break;
+                case "name-a-z":
+                    event.sort(Comparator.comparing(Event::getEventName, String.CASE_INSENSITIVE_ORDER));
+                    break;
+                case "name-z-a":
+                    event.sort(Comparator.comparing(Event::getEventName, String.CASE_INSENSITIVE_ORDER).reversed());
+                    break;
+            }
+        } */
         // If event matches filters, add it to the list
-        if (matchesFilter) {
-            event.add(events);
-        }
+        // if (matchesFilter) {
+        //    event.add(events);
+        //}
     }
 
-    return event;
+        return event;
     }
 }

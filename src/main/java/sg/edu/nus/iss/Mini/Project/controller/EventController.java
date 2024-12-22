@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.Mini.Project.controller;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,21 +45,38 @@ public class EventController {
     }
 
     @GetMapping("/filter")
-    public String showEvents(@RequestParam(name = "classification", required = false) String classification,
-                             Model model) {
-        
-        // Call the service layer with the classification filter
-        List<Event> filteredEvents = eventFilterService.getFilterEvent(classification);
-    
-        // Add the filtered events to the model to display in the view
-        model.addAttribute("events", filteredEvents);
-        
-        // Add filter options to the model to be used in the form
-        model.addAttribute("classifications", getAvailableClassifications(filteredEvents));
-        
-        return "eventHome"; // The name of your Thymeleaf template to display the events
-        
+public String showEvents(@RequestParam(name = "classification", required = false) String classification,
+                         @RequestParam(name = "sortOption", required = false) String sortOption,
+                         Model model) {
+    // Call the service layer with the filter
+    List<Event> filteredEvents = eventFilterService.getFilterEvent(classification);
+
+    // Apply sorting only if a valid sort option is provided
+    if (sortOption != null && !sortOption.isEmpty()) {
+        switch (sortOption) {
+            case "price-low-high":
+                filteredEvents.sort(Comparator.comparing(Event::getTicketPriceLow, Comparator.nullsLast(Double::compareTo)));
+                break;
+            case "price-high-low":
+                filteredEvents.sort(Comparator.comparing(Event::getTicketPriceLow, Comparator.nullsLast(Double::compareTo)).reversed());
+                break;
+            case "name-a-z":
+                filteredEvents.sort(Comparator.comparing(Event::getAttractionName, Comparator.nullsLast(String::compareToIgnoreCase)));
+                break;
+            case "name-z-a":
+                filteredEvents.sort(Comparator.comparing(Event::getAttractionName, Comparator.nullsLast(String::compareToIgnoreCase)).reversed());
+                break;
+        }
     }
+
+    // Add data to the model
+    model.addAttribute("events", filteredEvents);
+    model.addAttribute("classifications", getAvailableClassifications(filteredEvents));
+    model.addAttribute("sortOption", sortOption);
+
+    // Return the view
+    return "eventHome";
+}
 
     // Helper method to extract available classifications from the filtered events (if needed)
         private List<String> getAvailableClassifications(List<Event> events) {
