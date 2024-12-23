@@ -182,4 +182,23 @@ public class EventService {
 
         return events;
     }
+
+    public List<Event> getEventsByIds(List<String> eventIds) {
+        List<Event> events = new ArrayList<>();
+
+        for (String eventId : eventIds) {
+            try {
+                Event event = getEventFromId(eventId);
+                if (event != null) {
+                    events.add(event);
+                }
+            } catch (Exception e) {
+                // Log and skip any errors for invalid IDs
+                System.err.println("Error fetching event with ID: " + eventId);
+                e.printStackTrace();
+            }
+        }
+
+        return events;
+    }
 }
