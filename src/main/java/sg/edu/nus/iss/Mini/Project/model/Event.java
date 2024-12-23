@@ -5,7 +5,6 @@ import java.util.Date;
 public class Event {
     
     // get all event details api
-    // seatmap to be considered after everything is done
     private String id;
     private String eventName;
     private Date date;
@@ -16,8 +15,7 @@ public class Event {
     private String classificationName;
     private Double ticketPriceLow;
     private Double ticketPriceHigh;
-    private String ticketUrl;
-    // private String seatMap;    
+    private String ticketUrl;   
 
     public Event(String id, String eventName, Date date, String imageUrl, String venueName, String venueUrl,
             String attractionName, String classificationName, Double ticketPriceLow, Double ticketPriceHigh,
@@ -33,11 +31,10 @@ public class Event {
         this.ticketPriceLow = ticketPriceLow;
         this.ticketPriceHigh = ticketPriceHigh;
         this.ticketUrl = ticketUrl;
-        // this.seatMap = seatMap;
     }
  
     public Event() {
-        //TODO Auto-generated constructor stub
+        
     }
 
     public String getId() {
@@ -123,19 +120,9 @@ public class Event {
         return classificationName;
     }
 
-
     public void setClassificationName(String classificationName) {
         this.classificationName = classificationName;
     }
-
-
-    // public String getSeatMap() {
-    //     return seatMap;
-    // }
-
-    // public void setSeatMap(String seatMap) {
-    //     this.seatMap = seatMap;
-    // }
 
     @Override
     public String toString() {

@@ -55,7 +55,7 @@ public class UserController {
             if(user.getUsername().equals(username) && user.getPassword().equals(password)) {
                 session.setAttribute("loggedInUser", user);  // Store user in session
                 model.addAttribute("message", "Login successful");
-                return "welcome";
+                return "redirect:/event/home";  // Redirect to the event home page
             }
         }
         model.addAttribute("message", "Invalid username or password");
@@ -112,7 +112,73 @@ public class UserController {
 
         return "redirect:/user/profile";  // Redirect to profile after removal
     }
-    
+
+    @GetMapping("/update-profile")
+public String showUpdateProfilePage(HttpSession session, Model model) {
+    User loggedInUser = (User) session.getAttribute("loggedInUser");
+    if (loggedInUser == null) {
+        return "redirect:/user/login";  // Redirect to login if not logged in
+    }
+
+    // Add the user object to the model to pre-populate the form fields
+    model.addAttribute("user", loggedInUser);
+    return "updateProfile";  // This is the page with the form for profile update
+}
+
+    @PostMapping("/update-profile")
+    public String updateProfile(@ModelAttribute("user") User updatedUser, HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/user/login";  // Redirect to login if not logged in
+        }
+
+        loggedInUser.setUsername(updatedUser.getUsername());
+        loggedInUser.setEmail(updatedUser.getEmail());
+        session.setAttribute("loggedInUser", loggedInUser);
+
+        model.addAttribute("message", "Profile updated successfully.");
+        return "profile";  // Return to the profile page after update
+    }
+
+
+    @GetMapping("/change-password")
+public String showChangePasswordPage(HttpSession session, Model model) {
+    User loggedInUser = (User) session.getAttribute("loggedInUser");
+    if (loggedInUser == null) {
+        return "redirect:/user/login";  // Redirect to login if not logged in
+    }
+
+    return "changePassword";  // Page with form to change password
+}
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("currentPassword") String currentPassword,
+                                @RequestParam("newPassword") String newPassword,
+                                HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/user/login";  // Redirect to login if not logged in
+        }
+
+        if (!loggedInUser.getPassword().equals(currentPassword)) {
+            model.addAttribute("message", "Current password is incorrect.");
+            return "changePassword";  // Stay on the change password page if password is incorrect
+        }
+
+        loggedInUser.setPassword(newPassword);
+        session.setAttribute("loggedInUser", loggedInUser);
+
+        model.addAttribute("message", "Password changed successfully.");
+        return "profile";  // Redirect to the profile page after password change
+    }
+
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/user/login";
+    }
+
     // to see the saved list of usernames and passwords
     @GetMapping("/all-users")
     @ResponseBody

@@ -156,10 +156,10 @@ public class EventController {
     }
 
     // Helper method to extract available classifications from the filtered events (if needed)
-        private List<String> getAvailableClassifications(List<Event> events) {
-            return events.stream()
-                    .map(Event::getClassificationName)
-                    .distinct()
-                    .collect(Collectors.toList());
-        }
+    private List<String> getAvailableClassifications(List<Event> events) {
+        return events.stream()
+            .map(Event::getClassificationName)
+            .distinct()
+            .collect(Collectors.toList());
+    }
 }
