@@ -75,37 +75,11 @@ public class EventFilterService {
             events.setTicketPriceHigh(priceHigh);
             events.setTicketPriceLow(priceLow);
 
-        // Apply filters
-        // boolean matchesFilter = true;
-
-        // Filter by classification (classType)
-        if (classification != null && !classification.isEmpty() && !classType.equalsIgnoreCase(classification)) {
-            event.add(events);
-            // matchesFilter = false;
-        }
-
-        // Apply sorting
-        /* if (sortOption != null && !sortOption.isEmpty()) {
-            switch (sortOption.toLowerCase()) {
-                case "price-low-high":
-                    event.sort(Comparator.comparing(Event::getTicketPriceLow, Comparator.nullsLast(Comparator.naturalOrder())));
-                    break;
-                case "price-high-low":
-                    event.sort(Comparator.comparing(Event::getTicketPriceLow, Comparator.nullsLast(Comparator.reverseOrder())));
-                    break;
-                case "name-a-z":
-                    event.sort(Comparator.comparing(Event::getEventName, String.CASE_INSENSITIVE_ORDER));
-                    break;
-                case "name-z-a":
-                    event.sort(Comparator.comparing(Event::getEventName, String.CASE_INSENSITIVE_ORDER).reversed());
-                    break;
+            // Filter by classification (classType)
+            if (classification != null && !classification.isEmpty() && classType.equalsIgnoreCase(classification)) {
+                event.add(events);
             }
-        } */
-        // If event matches filters, add it to the list
-        // if (matchesFilter) {
-        //    event.add(events);
-        //}
-    }
+        }
 
         return event;
     }

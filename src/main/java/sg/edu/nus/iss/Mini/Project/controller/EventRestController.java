@@ -25,11 +25,5 @@ public class EventRestController {
         
         return ResponseEntity.ok().body(event);
     }
-
-    // @GetMapping("")
-    // public ResponseEntity res() {
-    //     eventRestService.getEventFromId("G5dIZb8kECzK3");
-    //     return ResponseEntity.ok().body(eventRestService.getEventFromId("G5dIZb8kECzK3")).getBody();
-    // }
     
 }

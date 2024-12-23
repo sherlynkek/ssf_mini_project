@@ -39,44 +39,117 @@ public class EventController {
     public String getEventDetail(@PathVariable("id") String id, Model model) {
 
         Event events = eventService.getEventFromId(id);
+        
         model.addAttribute("event", events);
 
         return "eventDetail";
     }
 
-    @GetMapping("/filter")
-public String showEvents(@RequestParam(name = "classification", required = false) String classification,
-                         @RequestParam(name = "sortOption", required = false) String sortOption,
-                         Model model) {
-    // Call the service layer with the filter
-    List<Event> filteredEvents = eventFilterService.getFilterEvent(classification);
-
-    // Apply sorting only if a valid sort option is provided
-    if (sortOption != null && !sortOption.isEmpty()) {
-        switch (sortOption) {
-            case "price-low-high":
-                filteredEvents.sort(Comparator.comparing(Event::getTicketPriceLow, Comparator.nullsLast(Double::compareTo)));
-                break;
-            case "price-high-low":
-                filteredEvents.sort(Comparator.comparing(Event::getTicketPriceLow, Comparator.nullsLast(Double::compareTo)).reversed());
-                break;
-            case "name-a-z":
-                filteredEvents.sort(Comparator.comparing(Event::getAttractionName, Comparator.nullsLast(String::compareToIgnoreCase)));
-                break;
-            case "name-z-a":
-                filteredEvents.sort(Comparator.comparing(Event::getAttractionName, Comparator.nullsLast(String::compareToIgnoreCase)).reversed());
-                break;
-        }
+    @GetMapping("/{id}")
+    public String getEventDetails(@PathVariable("id") String id, Model model) {
+        
+        return "eventDetail";
     }
 
-    // Add data to the model
-    model.addAttribute("events", filteredEvents);
-    model.addAttribute("classifications", getAvailableClassifications(filteredEvents));
-    model.addAttribute("sortOption", sortOption);
+    @GetMapping("/filter")
+    public String showEvents(@RequestParam(name = "classification", required = false) String classification,
+                            @RequestParam(name = "sortOption", required = false) String sortOption,
+                            Model model) {
+        // Call the service layer with the filter
+        List<Event> filteredEvents = eventFilterService.getFilterEvent(classification);
 
-    // Return the view
-    return "eventHome";
-}
+        // Apply sorting only if a valid sort option is provided
+        if (sortOption != null && !sortOption.isEmpty()) {
+            switch (sortOption) {
+                case "price-low-high":
+                    filteredEvents.sort(new Comparator<Event>() {
+                        @Override
+                        public int compare(Event e1, Event e2) {
+                            Double price1 = e1.getTicketPriceLow();
+                            Double price2 = e2.getTicketPriceLow();
+                            if (price1 == null && price2 == null) {
+                                return 0;
+                            } else if (price1 == null) {
+                                return 1; // Nulls last
+                            } else if (price2 == null) {
+                                return -1; // Nulls last
+                            } else {
+                                return price1.compareTo(price2);
+                            }
+                        }
+                    });
+                    break;
+        
+                case "price-high-low":
+                    filteredEvents.sort(new Comparator<Event>() {
+                        @Override
+                        public int compare(Event e1, Event e2) {
+                            Double price1 = e1.getTicketPriceLow();
+                            Double price2 = e2.getTicketPriceLow();
+                            if (price1 == null && price2 == null) {
+                                return 0;
+                            } else if (price1 == null) {
+                                return 1; // Nulls last
+                            } else if (price2 == null) {
+                                return -1; // Nulls last
+                            } else {
+                                return price2.compareTo(price1); // Reversed order
+                            }
+                        }
+                    });
+                    break;
+        
+                case "name-a-z":
+                    filteredEvents.sort(new Comparator<Event>() {
+                        @Override
+                        public int compare(Event e1, Event e2) {
+                            String name1 = e1.getAttractionName();
+                            String name2 = e2.getAttractionName();
+                            if (name1 == null && name2 == null) {
+                                return 0;
+                            } else if (name1 == null) {
+                                return 1; // Nulls last
+                            } else if (name2 == null) {
+                                return -1; // Nulls last
+                            } else {
+                                return name1.compareToIgnoreCase(name2);
+                            }
+                        }
+                    });
+                    break;
+        
+                case "name-z-a":
+                    filteredEvents.sort(new Comparator<Event>() {
+                        @Override
+                        public int compare(Event e1, Event e2) {
+                            String name1 = e1.getAttractionName();
+                            String name2 = e2.getAttractionName();
+                            if (name1 == null && name2 == null) {
+                                return 0;
+                            } else if (name1 == null) {
+                                return 1; // Nulls last
+                            } else if (name2 == null) {
+                                return -1; // Nulls last
+                            } else {
+                                return name2.compareToIgnoreCase(name1); // Reversed order
+                            }
+                        }
+                    });
+                    break;
+        
+                default:
+                    break;
+            }
+        }
+
+        // Add data to the model
+        model.addAttribute("events", filteredEvents);
+        model.addAttribute("classifications", getAvailableClassifications(filteredEvents));
+        model.addAttribute("sortOption", sortOption);
+
+        // Return the view
+        return "eventHome";
+    }
 
     // Helper method to extract available classifications from the filtered events (if needed)
         private List<String> getAvailableClassifications(List<Event> events) {
@@ -85,11 +158,4 @@ public String showEvents(@RequestParam(name = "classification", required = false
                     .distinct()
                     .collect(Collectors.toList());
         }
-    }
-
-    // @GetMapping("/myEvent")
-    // public String getMyEventPage(Model model) {
-
-    //     return "myEvent";
-    // }
-    
+}
