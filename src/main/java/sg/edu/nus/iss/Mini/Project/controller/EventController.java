@@ -1,7 +1,6 @@
 package sg.edu.nus.iss.Mini.Project.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,10 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.Mini.Project.model.Event;
 import sg.edu.nus.iss.Mini.Project.service.EventFilterService;
 import sg.edu.nus.iss.Mini.Project.service.EventService;
@@ -40,7 +39,6 @@ public class EventController {
     public String getEventDetail(@PathVariable("id") String id, Model model) {
 
         Event events = eventService.getEventFromId(id);
-        
         model.addAttribute("event", events);
 
         return "eventDetail";
@@ -50,7 +48,7 @@ public class EventController {
     public String showEvents(@RequestParam(name = "classification", required = false) String classification,
                             @RequestParam(name = "sortOption", required = false) String sortOption,
                             Model model) {
-        // Fetch all events initially
+    // Fetch all events initially
     List<Event> allEvents = eventService.getAllEvent();
     List<Event> filteredEvents = new ArrayList<>();
 
@@ -61,7 +59,8 @@ public class EventController {
                 filteredEvents.add(event);
             }
         }
-    } else {
+    } 
+    else {
         filteredEvents = allEvents; // If no classification filter, show all events
     }
         // Apply sorting only if a valid sort option is provided

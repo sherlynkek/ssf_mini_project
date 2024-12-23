@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.Mini.Project.model.User;
 
 @Controller
@@ -40,10 +41,12 @@ public class UserController {
 
     @PostMapping("/login")
     public String loginUser(@RequestParam String username, 
-                            @RequestParam String password, Model model) {
+                            @RequestParam String password, 
+                            HttpSession session, Model model) {
         
         for(User user : users) {
             if(user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                session.setAttribute("loggedInUser", user);  // Store user in session
                 model.addAttribute("message", "Login successful");
                 return "welcome";
             }
@@ -52,6 +55,15 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("/profile")
+    public String userProfile(HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/user/login";  // Redirect to login if not logged in
+        }
+        model.addAttribute("user", loggedInUser);
+        return "profile";
+    }
     // to see the saved list of usernames and passwords
     @GetMapping("/all-users")
     @ResponseBody
