@@ -2,7 +2,6 @@ package sg.edu.nus.iss.Mini.Project.service;
 
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,3 +83,6 @@ public class EventFilterService {
         return event;
     }
 }
+
+
+

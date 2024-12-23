@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.Mini.Project.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -45,19 +46,24 @@ public class EventController {
         return "eventDetail";
     }
 
-    @GetMapping("/{id}")
-    public String getEventDetails(@PathVariable("id") String id, Model model) {
-        
-        return "eventDetail";
-    }
-
     @GetMapping("/filter")
     public String showEvents(@RequestParam(name = "classification", required = false) String classification,
                             @RequestParam(name = "sortOption", required = false) String sortOption,
                             Model model) {
-        // Call the service layer with the filter
-        List<Event> filteredEvents = eventFilterService.getFilterEvent(classification);
+        // Fetch all events initially
+    List<Event> allEvents = eventService.getAllEvent();
+    List<Event> filteredEvents = new ArrayList<>();
 
+    // Apply classification filter
+    if (classification != null && !classification.isEmpty()) {
+        for (Event event : allEvents) {
+            if (classification.equals(event.getClassificationName())) {
+                filteredEvents.add(event);
+            }
+        }
+    } else {
+        filteredEvents = allEvents; // If no classification filter, show all events
+    }
         // Apply sorting only if a valid sort option is provided
         if (sortOption != null && !sortOption.isEmpty()) {
             switch (sortOption) {
