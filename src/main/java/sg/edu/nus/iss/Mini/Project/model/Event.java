@@ -1,13 +1,14 @@
 package sg.edu.nus.iss.Mini.Project.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public class Event {
     
     // get all event details api
     private String id;
     private String eventName;
-    private Date date;
+    private LocalDate date;
     private String imageUrl;
     private String venueName;
     private String venueUrl;
@@ -16,8 +17,8 @@ public class Event {
     private Double ticketPriceLow;
     private Double ticketPriceHigh;
     private String ticketUrl;   
-
-    public Event(String id, String eventName, Date date, String imageUrl, String venueName, String venueUrl,
+ 
+    public Event(String id, String eventName, LocalDate date, String imageUrl, String venueName, String venueUrl,
             String attractionName, String classificationName, Double ticketPriceLow, Double ticketPriceHigh,
             String ticketUrl) {
         this.id = id;
@@ -32,7 +33,7 @@ public class Event {
         this.ticketPriceHigh = ticketPriceHigh;
         this.ticketUrl = ticketUrl;
     }
- 
+
     public Event() {
         
     }
@@ -52,11 +53,11 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -130,6 +131,8 @@ public class Event {
                 + venueName + "," + venueUrl + "," + attractionName + "," + classificationName
                 + "," + ticketPriceLow + "," + ticketPriceHigh + "," + ticketUrl;
     }
+
+
 
     
 }

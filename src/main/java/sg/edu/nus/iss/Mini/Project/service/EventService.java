@@ -1,7 +1,7 @@
 package sg.edu.nus.iss.Mini.Project.service;
 
 import java.io.StringReader;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +96,7 @@ public class EventService {
             events.setId(jObjectRecord.getString("id"));
             events.setEventName(jObjectRecord.getString("name"));
             events.setTicketUrl(jObjectRecord.getString("url"));
-            events.setDate(Date.valueOf(localDate));
+            events.setDate(LocalDate.parse(localDate));
             events.setImageUrl(imageURL);
             events.setVenueName(venueName);
             events.setVenueUrl(venueURL);
@@ -171,7 +171,7 @@ public class EventService {
         events.setId(jObject.getString("id"));
         events.setEventName(jObject.getString("name"));
         events.setTicketUrl(jObject.getString("url"));
-        events.setDate(Date.valueOf(localDate));
+        events.setDate(LocalDate.parse(localDate));
         events.setImageUrl(imageURL);
         events.setVenueName(venueName);
         events.setVenueUrl(venueURL);
