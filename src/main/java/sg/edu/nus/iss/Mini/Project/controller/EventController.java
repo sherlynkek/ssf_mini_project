@@ -27,6 +27,7 @@ public class EventController {
     @Autowired
     EventFilterService eventFilterService;
 
+    // shows all the events available 
     @GetMapping("/home")
     public String showEventHomePage(Model model) {
         model.addAttribute("eventsList", eventService.getAllEvent());
@@ -34,6 +35,7 @@ public class EventController {
         return "eventHome";
     }
 
+    // after clicking into the specific event, it will show the event details
     @GetMapping("/{id}")
     public String getEventDetail(@PathVariable("id") String id, Model model) {
 
@@ -43,6 +45,7 @@ public class EventController {
         return "eventDetail";
     }
 
+    // filter the events by their classification and sort them by price and event name
     @GetMapping("/filter")
     public String showEvents(@RequestParam(name = "classification", required = false) String classification,
                             @RequestParam(name = "sortOption", required = false) String sortOption,

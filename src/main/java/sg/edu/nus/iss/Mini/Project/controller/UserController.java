@@ -28,6 +28,7 @@ public class UserController {
     
     private List<User> users = new ArrayList<>();
 
+    // registration
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("user", new User());
@@ -41,11 +42,14 @@ public class UserController {
         return "login";
     }
 
+    // login
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         return "login";
     }
 
+    // if login successful, it will return to event home page
+    // if login failed, it will return a message stating "invalid username or password"
     @PostMapping("/login")
     public String loginUser(@RequestParam String username, 
                             @RequestParam String password, 
@@ -62,6 +66,7 @@ public class UserController {
         return "login";
     }
 
+    // profile page of each user (need to provide link for user to visit in)
     @GetMapping("/profile")
     public String userProfile(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -82,6 +87,7 @@ public class UserController {
         return "profile";
     }
 
+    // add interested events into the user profile
     @PostMapping("/interest/{eventId}")
     public String addEventToFavorites(@PathVariable("eventId") String eventId, HttpSession session, Model model) {
         List<String> preferredEvents = (List<String>) session.getAttribute("preferredEvents");
@@ -98,6 +104,7 @@ public class UserController {
         return "redirect:/user/profile";  // Redirect to profile after adding
     }
 
+    // allow user to remove interested events from their profile
     @PostMapping("/remove-interest/{eventId}")
     public String removeEventFromFavorites(@PathVariable("eventId") String eventId, HttpSession session, Model model) {
         List<String> preferredEvents = (List<String>) session.getAttribute("preferredEvents");
@@ -113,17 +120,18 @@ public class UserController {
         return "redirect:/user/profile";  // Redirect to profile after removal
     }
 
+    // update the user profile 
     @GetMapping("/update-profile")
-public String showUpdateProfilePage(HttpSession session, Model model) {
-    User loggedInUser = (User) session.getAttribute("loggedInUser");
-    if (loggedInUser == null) {
-        return "redirect:/user/login";  // Redirect to login if not logged in
-    }
+    public String showUpdateProfilePage(HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/user/login";  // Redirect to login if not logged in
+        }
 
-    // Add the user object to the model to pre-populate the form fields
-    model.addAttribute("user", loggedInUser);
-    return "updateProfile";  // This is the page with the form for profile update
-}
+        // Add the user object to the model to pre-populate the form fields
+        model.addAttribute("user", loggedInUser);
+        return "profileSetting";  // This is the page with the form for profile update
+    }
 
     @PostMapping("/update-profile")
     public String updateProfile(@ModelAttribute("user") User updatedUser, HttpSession session, Model model) {
@@ -142,14 +150,14 @@ public String showUpdateProfilePage(HttpSession session, Model model) {
 
 
     @GetMapping("/change-password")
-public String showChangePasswordPage(HttpSession session, Model model) {
-    User loggedInUser = (User) session.getAttribute("loggedInUser");
-    if (loggedInUser == null) {
-        return "redirect:/user/login";  // Redirect to login if not logged in
-    }
+    public String showChangePasswordPage(HttpSession session, Model model) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/user/login";  // Redirect to login if not logged in
+        }
 
-    return "changePassword";  // Page with form to change password
-}
+        return "profileSetting";  // Page with form to change password
+    }
 
     @PostMapping("/change-password")
     public String changePassword(@RequestParam("currentPassword") String currentPassword,
@@ -162,7 +170,7 @@ public String showChangePasswordPage(HttpSession session, Model model) {
 
         if (!loggedInUser.getPassword().equals(currentPassword)) {
             model.addAttribute("message", "Current password is incorrect.");
-            return "changePassword";  // Stay on the change password page if password is incorrect
+            return "profileSetting";  // Stay on the change password page if password is incorrect
         }
 
         loggedInUser.setPassword(newPassword);
@@ -173,6 +181,7 @@ public String showChangePasswordPage(HttpSession session, Model model) {
     }
 
 
+    // user to log out from session and their account
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
