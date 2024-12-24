@@ -56,7 +56,8 @@
             </div>
         </form>
     
-        <!-- Display the filtered events -->
+        <!-- Display the filtered events only when "/filter" is applied -->
+    <div th:if="${events}">
         <table class="table table-striped table-bordered mb-5">
             <thead>
                 <tr>
@@ -81,6 +82,7 @@
                 </th:block>
             </tbody>
         </table>
+    </div>
     
         <!-- Event List -->
         <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -91,6 +93,7 @@
                     </a>
                     <div class="card-body">
                         <h5 class="card-title" th:utext="${event.eventName}">Event Name</h5>
+                        <h6 class="card-title" th:utext="${event.date}">Event Date</h6>
                     </div>
                 </div>
             </span>

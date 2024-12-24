@@ -30,7 +30,13 @@ public class EventController {
     // shows all the events available 
     @GetMapping("/home")
     public String showEventHomePage(Model model) {
-        model.addAttribute("eventsList", eventService.getAllEvent());
+        List<Event> eventsList = eventService.getAllEvent();
+
+        // Sort events by date (ascending order)
+        eventsList.sort(Comparator.comparing(Event::getDate));
+
+        model.addAttribute("eventsList", eventsList);
+        // model.addAttribute("eventsList", eventService.getAllEvent());
 
         return "eventHome";
     }
