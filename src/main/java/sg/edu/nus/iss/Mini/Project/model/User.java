@@ -5,9 +5,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class User {
     
+    @Size(min = 5, max = 20, message = "Username should be at least 5 to 20 characters long")
     @NotBlank(message = "Username is mandatory")
     private String username;
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,12}$", message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 - 12 characters")
