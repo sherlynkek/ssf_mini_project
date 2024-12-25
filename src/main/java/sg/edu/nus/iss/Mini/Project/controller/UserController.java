@@ -44,13 +44,11 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "register"; // Return the same form page if there are errors
+            return "register"; // Return the form if validation fails
         }
-        else {
-            userService.addUser(user);
-            model.addAttribute("message", "Registration is successful");
-        }
-        return "login";
+        userService.addUser(user);
+        model.addAttribute("message", "Registration is successful");
+        return "login"; // Redirect to login page
     }
 
     // login

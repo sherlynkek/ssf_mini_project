@@ -24,7 +24,7 @@
     <div class="container my-5">
         <h2 class="text-center mb-4">Registration</h2>
     
-        <form th:object="${user}" th:action="@{/register}" method="post" class="w-50 mx-auto">
+        <form th:object="${user}" th:action="@{/user/register}" method="post" class="w-50 mx-auto">
             <div class="mb-3">
                 <label for="username" class="form-label">Username:</label>
                 <input type="text" id="username" name="username" class="form-control" required>
