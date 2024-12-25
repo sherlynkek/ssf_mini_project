@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.Mini.Project.model.Event;
 import sg.edu.nus.iss.Mini.Project.model.User;
 import sg.edu.nus.iss.Mini.Project.service.EventService;
+import sg.edu.nus.iss.Mini.Project.service.UserService;
 
 @Controller
 @RequestMapping("/user")
@@ -25,6 +26,9 @@ public class UserController {
 
     @Autowired
     EventService eventService;
+    
+    @Autowired
+    UserService userService;
     
     private List<User> users = new ArrayList<>();
 
@@ -37,7 +41,7 @@ public class UserController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, Model model) {
-        users.add(user);
+        userService.addUser(user);
         model.addAttribute("message", "Registration is successful");
         return "login";
     }
@@ -54,13 +58,11 @@ public class UserController {
     public String loginUser(@RequestParam String username, 
                             @RequestParam String password, 
                             HttpSession session, Model model) {
-        
-        for(User user : users) {
-            if(user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                session.setAttribute("loggedInUser", user);  // Store user in session
-                model.addAttribute("message", "Login successful");
-                return "redirect:/event/home";  // Redirect to the event home page
-            }
+        User user = userService.findUserByUsername(username);
+        if (user != null && user.checkPassword(password)) {
+            session.setAttribute("loggedInUser", user);
+            model.addAttribute("message", "Login successful");
+            return "redirect:/event/home";
         }
         model.addAttribute("message", "Invalid username or password");
         return "login";

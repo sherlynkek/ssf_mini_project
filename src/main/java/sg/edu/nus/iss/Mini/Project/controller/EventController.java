@@ -36,7 +36,6 @@ public class EventController {
         eventsList.sort(Comparator.comparing(Event::getDate));
 
         model.addAttribute("eventsList", eventsList);
-        // model.addAttribute("eventsList", eventService.getAllEvent());
 
         return "eventHome";
     }

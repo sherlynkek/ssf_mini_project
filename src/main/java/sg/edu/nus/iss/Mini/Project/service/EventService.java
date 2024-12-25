@@ -83,7 +83,8 @@ public class EventService {
                 if(jArrayVenue != null) {
                     JsonObject jObjectVenue = jArrayVenue.getJsonObject(0);
                     venueName = jObjectVenue.getString("name");
-                    venueURL = jObjectVenue.getString("url", "No url provided");
+                    venueURL = jObjectVenue.containsKey("url") ? jObjectVenue.getString("url") : null;
+                    // venueURL = jObjectVenue.getString("url", "No url provided");
                 }
             }
                               

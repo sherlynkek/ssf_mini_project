@@ -42,9 +42,11 @@
                         <p><strong>Date:</strong> <span th:utext="${event.date}">Date of the event</span></p>
                         
                         <!-- Venue -->
-                        <p><strong>Venue:</strong> <span th:utext="${event.venueName}"></span></p>
-                        <a th:href="${event.venueUrl}" class="btn btn-primary" target="_blank">Visit Venue Website</a>
-                        
+                        <div>
+                            <p><strong>Venue Name:</strong> <span th:utext="${event.venueName}"></span></p>
+                            <a th:if="${event.venueUrl != null}" th:href="${event.venueUrl}" class="btn btn-primary" target="_blank">Visit Venue</a>
+                        </div>
+
                         <!-- Classification -->
                         <p><strong>Classification:</strong> <span th:utext="${event.classificationName}"></span></p>
                         
@@ -52,13 +54,13 @@
                         <p><strong>Price Range:</strong> <span th:utext="${event.ticketPriceLow}"></span> to <span th:utext="${event.ticketPriceHigh}"></span></p>
                         
                         <!-- Ticket URL -->
-                        <a th:href="${event.ticketUrl}" class="btn btn-success" target="_blank">Buy Tickets</a>
+                        <a th:if="${event.ticketUrl != null}" th:href="${event.ticketUrl}" class="btn btn-success" target="_blank">Buy Tickets</a>
                         
                         <!-- Attraction -->
                         <p><strong>Attraction:</strong> <span th:utext="${event.attractionName}"></span></p>
 
                         <!-- Interested Button-->
-                        <button type="button" class="btn btn-outline-danger">Interested?</button>
+                        <button type="button" class="btn btn-outline-danger">Interested</button>
                     </div>
                 </div>
             </div>
