@@ -65,7 +65,7 @@ public class UserController {
                             HttpSession session, Model model) {
         User user = userService.findUserByUsername(username);
         if (user != null && user.checkPassword(password)) {
-            session.setAttribute("loggedInUser", user);
+            session.setAttribute("loggedInUser", user); // Make sure this is happening
             model.addAttribute("message", "Login successful");
             return "redirect:/event/home";
         }
@@ -192,7 +192,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/user/login";
+        return "redirect:/event/home";
     }
 
     // to see the saved list of usernames and passwords
