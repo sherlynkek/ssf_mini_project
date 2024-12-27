@@ -37,8 +37,6 @@ public class UserController {
     @Autowired
     MapRepo mapRepo;
     
-    private List<User> users = new ArrayList<>();
-
     // registration
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
@@ -198,7 +196,7 @@ public class UserController {
 
                 // Add events to the new username's key
                 mapRepo.addEvents(newPreferredEventsKey, eventIds, eventDetails);
-                mapRepo.delete(oldPreferredEventsKey, oldUsername);  // Remove old events key
+                mapRepo.deleteKey(oldPreferredEventsKey);  // Remove old events key
             }
 
             // Transfer user details, including password, to the new username key
@@ -211,7 +209,7 @@ public class UserController {
             mapRepo.create(newRedisKey, "password", storedPassword); // Include password in the new key
 
             // Delete the old Redis key
-            mapRepo.delete(oldRedisKey, oldUsername);
+            mapRepo.deleteKey(oldRedisKey);
 
             // Update the session with the new user object
             loggedInUser.setUsername(updatedUser.getUsername());

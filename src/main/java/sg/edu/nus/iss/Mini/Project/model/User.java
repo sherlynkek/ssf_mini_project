@@ -1,6 +1,6 @@
 package sg.edu.nus.iss.Mini.Project.model;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

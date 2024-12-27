@@ -31,6 +31,10 @@ public class MapRepo {
         return redisTemplate.opsForHash().delete(redisKey, hashKey); 
     }
 
+    public void deleteKey(String key) {
+        redisTemplate.delete(key);
+    }
+    
     // Check if a key exists in Redis
     public Boolean keyExists(String redisKey, String hashKey) {
         return redisTemplate.opsForHash().hasKey(redisKey, hashKey);
