@@ -21,11 +21,12 @@ public class User {
 
 
     // Create a BCrypt password encoder instance
-    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder()
-    ;
+    // private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     public User(String username, String password, String email) {
         this.username = username;
-        this.password = passwordEncoder.encode(password);
+        this.password = password;
+        // this.password = passwordEncoder.encode(password);
         this.email = email;
     }
 
@@ -62,8 +63,8 @@ public class User {
         return username + "," + password + "," + email;
     }
 
-    public boolean checkPassword(String password) {
+    /* public boolean checkPassword(String password) {
         return passwordEncoder.matches(password, this.password);  // Check hashed password during login
-    }
+    } */
     
 }

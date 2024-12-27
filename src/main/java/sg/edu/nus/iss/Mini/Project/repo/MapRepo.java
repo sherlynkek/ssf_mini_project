@@ -21,20 +21,23 @@ public class MapRepo {
         redisTemplate.opsForHash().put(redisKey, hashKey, hashValue);
     }
 
-    public Object get(String redisKey, String hashKey) {
-        return redisTemplate.opsForHash().get(redisKey, hashKey);
+    // Retrieve an individual event by eventId
+    public String get(String redisKey, String hashKey) {
+        return (String)redisTemplate.opsForHash().get(redisKey, hashKey);
     }
-
+    
+    // Delete an event by eventId
     public Long delete(String redisKey, String hashKey) {
-        // returns the number of entries deleted
-        return redisTemplate.opsForHash().delete(hashKey, hashKey);
+        return redisTemplate.opsForHash().delete(redisKey, hashKey); 
     }
 
+    // Check if a key exists in Redis
     public Boolean keyExists(String redisKey, String hashKey) {
         return redisTemplate.opsForHash().hasKey(redisKey, hashKey);
     }
 
-    public Map<Object, Object> getEntries(String redisKey) {
+    // Retrieve all events for a particular key
+    public Map<Object, Object> getAllEvents(String redisKey) {
         return redisTemplate.opsForHash().entries(redisKey);
     }
 
@@ -46,13 +49,29 @@ public class MapRepo {
         return redisTemplate.opsForHash().values(redisKey);
     }
 
+    // Store an individual event (it could be by event ID, for example)
+    public void addEvent(String redisKey, String eventId, String eventDetails) {
+        redisTemplate.opsForHash().put(redisKey, eventId, eventDetails);
+    }
+
+    // Store a list of events (copying them individually)
+    public void addEvents(String redisKey, List<String> eventIds, List<String> eventDetails) {
+        for (int i = 0; i < eventIds.size(); i++) {
+            addEvent(redisKey, eventIds.get(i), eventDetails.get(i));
+        }
+    }
+
+    // Check the size of a hash
     public Long size(String redisKey) {
         return redisTemplate.opsForHash().size(redisKey);
     }
 
-    // expire duration
+    // Expire a key
     public void expire(String redisKey, Long expireValue) {
         Duration expireDuration = Duration.ofSeconds(expireValue);
         redisTemplate.expire(redisKey, expireDuration);
     }
+
+    
+
 }

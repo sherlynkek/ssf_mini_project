@@ -2,6 +2,8 @@ package sg.edu.nus.iss.Mini.Project.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,12 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import sg.edu.nus.iss.Mini.Project.model.Event;
 import sg.edu.nus.iss.Mini.Project.model.User;
+import sg.edu.nus.iss.Mini.Project.repo.MapRepo;
 import sg.edu.nus.iss.Mini.Project.service.EventService;
 import sg.edu.nus.iss.Mini.Project.service.UserService;
 
@@ -31,6 +33,9 @@ public class UserController {
     
     @Autowired
     UserService userService;
+
+    @Autowired
+    MapRepo mapRepo;
     
     private List<User> users = new ArrayList<>();
 
@@ -46,7 +51,15 @@ public class UserController {
         if (result.hasErrors()) {
             return "register"; // Return the form if validation fails
         }
-        userService.addUser(user);
+    
+        // Create Redis key for the user
+        String redisKey = "user:" + user.getUsername();
+        
+        // Store all user details in one hash
+        mapRepo.create(redisKey, "username", user.getUsername());
+        mapRepo.create(redisKey, "password", user.getPassword());
+        mapRepo.create(redisKey, "email", user.getEmail());
+    
         model.addAttribute("message", "Registration is successful");
         return "login"; // Redirect to login page
     }
@@ -60,17 +73,28 @@ public class UserController {
     // if login successful, it will return to event home page
     // if login failed, it will return a message stating "invalid username or password"
     @PostMapping("/login")
-    public String loginUser(@RequestParam String username, 
-                            @RequestParam String password, 
+    public String loginUser(@RequestParam("username") String username,
+                            @RequestParam("password") String password,
                             HttpSession session, Model model) {
-        User user = userService.findUserByUsername(username);
-        if (user != null && user.checkPassword(password)) {
-            session.setAttribute("loggedInUser", user); // Make sure this is happening
-            model.addAttribute("message", "Login successful");
-            return "redirect:/event/home";
+
+        // Query Redis to check if the username exists
+        String redisKey = "user:" + username;
+        String storedPassword = (String) mapRepo.get(redisKey, "password");
+
+        if (storedPassword == null || !storedPassword.equals(password)) {
+            model.addAttribute("message", "Invalid username or password.");
+            return "login";  // Return to login page if authentication fails
         }
-        model.addAttribute("message", "Invalid username or password");
-        return "login";
+
+        // User authentication successful, create session
+        String email = (String) mapRepo.get(redisKey, "email");
+        User loggedInUser = new User();
+        loggedInUser.setUsername(username);
+        loggedInUser.setPassword(storedPassword);
+        loggedInUser.setEmail(email);
+        session.setAttribute("loggedInUser", loggedInUser);
+
+        return "redirect:/event/home";  // Redirect to profile page after successful login
     }
 
     // profile page of each user (need to provide link for user to visit in)
@@ -80,11 +104,16 @@ public class UserController {
         if (loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
-        
+
         model.addAttribute("user", loggedInUser);
 
-        // Retrieve preferred events
-        List<String> preferredEventIds = (List<String>) session.getAttribute("preferredEvents");
+        // Retrieve preferred events from MapRepo
+        String redisKey = loggedInUser.getUsername() + "_preferredEvents";
+        List<Object> preferredEventObjects = mapRepo.getValues(redisKey); // Get as List<Object>
+        List<String> preferredEventIds = preferredEventObjects.stream()
+        .map(Object::toString) // Convert each Object to String
+        .collect(Collectors.toList()); 
+        
         List<Event> preferredEvents = new ArrayList<>();
         if (preferredEventIds != null && !preferredEventIds.isEmpty()) {
             preferredEvents = eventService.getEventsByIds(preferredEventIds);
@@ -94,31 +123,34 @@ public class UserController {
         return "profile";
     }
 
-    // add interested events into the user profile
+    // Add event to favorites
     @PostMapping("/interest/{eventId}")
     public String addEventToFavorites(@PathVariable("eventId") String eventId, HttpSession session, Model model) {
-        List<String> preferredEvents = (List<String>) session.getAttribute("preferredEvents");
-        if (preferredEvents == null) {
-            preferredEvents = new ArrayList<>();
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
-        if (!preferredEvents.contains(eventId)) {
-            preferredEvents.add(eventId);
-            session.setAttribute("preferredEvents", preferredEvents);
+        String redisKey = loggedInUser.getUsername() + "_preferredEvents";
+        if (!mapRepo.keyExists(redisKey, eventId)) {
+            mapRepo.create(redisKey, eventId, eventId); // Use the eventId as both key and value for simplicity
         }
 
         model.addAttribute("message", "Event added to your preferences!");
         return "redirect:/user/profile";  // Redirect to profile after adding
     }
 
-    // allow user to remove interested events from their profile
-    @PostMapping("/remove-interest/{eventId}")
+    // Remove event from favorites
+    @GetMapping("/remove-interest/{eventId}")
     public String removeEventFromFavorites(@PathVariable("eventId") String eventId, HttpSession session, Model model) {
-        List<String> preferredEvents = (List<String>) session.getAttribute("preferredEvents");
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/user/login";  // Redirect to login if not logged in
+        }
 
-        if (preferredEvents != null && preferredEvents.contains(eventId)) {
-            preferredEvents.remove(eventId);
-            session.setAttribute("preferredEvents", preferredEvents);
+        String redisKey = loggedInUser.getUsername() + "_preferredEvents";
+        if (mapRepo.keyExists(redisKey, eventId)) {
+            mapRepo.delete(redisKey, eventId);
             model.addAttribute("message", "Event removed from your preferences.");
         } else {
             model.addAttribute("message", "Event not found in your preferences.");
@@ -127,7 +159,7 @@ public class UserController {
         return "redirect:/user/profile";  // Redirect to profile after removal
     }
 
-    // update the user profile 
+    // Update the user profile
     @GetMapping("/update-profile")
     public String showUpdateProfilePage(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -135,9 +167,8 @@ public class UserController {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
-        // Add the user object to the model to pre-populate the form fields
         model.addAttribute("user", loggedInUser);
-        return "profileSetting";  // This is the page with the form for profile update
+        return "profileSetting";  // Page with form to update user profile
     }
 
     @PostMapping("/update-profile")
@@ -147,12 +178,54 @@ public class UserController {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
-        loggedInUser.setUsername(updatedUser.getUsername());
-        loggedInUser.setEmail(updatedUser.getEmail());
-        session.setAttribute("loggedInUser", loggedInUser);
+        String oldUsername = loggedInUser.getUsername();
+        String newUsername = updatedUser.getUsername();
 
-        model.addAttribute("message", "Profile updated successfully.");
-        return "profile";  // Return to the profile page after update
+        // If the username has changed, update Redis keys
+        if (!oldUsername.equals(newUsername)) {
+            // Transfer preferred events to the new username
+            String oldPreferredEventsKey = oldUsername + "_preferredEvents";
+            String newPreferredEventsKey = newUsername + "_preferredEvents";
+
+            Map<Object, Object> oldEvents = mapRepo.getAllEvents(oldPreferredEventsKey);
+            if (oldEvents != null && !oldEvents.isEmpty()) {
+                List<String> eventIds = new ArrayList<>();
+                List<String> eventDetails = new ArrayList<>();
+                oldEvents.forEach((eventId, eventDetail) -> {
+                    eventIds.add((String) eventId);
+                    eventDetails.add((String) eventDetail);
+                });
+
+                // Add events to the new username's key
+                mapRepo.addEvents(newPreferredEventsKey, eventIds, eventDetails);
+                mapRepo.delete(oldPreferredEventsKey, oldUsername);  // Remove old events key
+            }
+
+            // Transfer user details, including password, to the new username key
+            String oldRedisKey = "user:" + oldUsername;
+            String newRedisKey = "user:" + newUsername;
+
+            String storedPassword = (String) mapRepo.get(oldRedisKey, "password");
+            mapRepo.create(newRedisKey, "username", updatedUser.getUsername());
+            mapRepo.create(newRedisKey, "email", updatedUser.getEmail());
+            mapRepo.create(newRedisKey, "password", storedPassword); // Include password in the new key
+
+            // Delete the old Redis key
+            mapRepo.delete(oldRedisKey, oldUsername);
+
+            // Update the session with the new user object
+            loggedInUser.setUsername(updatedUser.getUsername());
+            loggedInUser.setEmail(updatedUser.getEmail());
+            session.setAttribute("loggedInUser", loggedInUser);
+
+            model.addAttribute("message", "Profile updated successfully.");
+        }
+
+        // Invalidate the current session and force re-login
+        session.invalidate();  // Invalidate the session to reset any stored user info
+
+        // Redirect to the login page for re-authentication
+        return "redirect:/user/login";
     }
 
 
@@ -168,8 +241,8 @@ public class UserController {
 
     @PostMapping("/change-password")
     public String changePassword(@RequestParam("currentPassword") String currentPassword,
-                                @RequestParam("newPassword") String newPassword,
-                                HttpSession session, Model model) {
+                                 @RequestParam("newPassword") String newPassword,
+                                 HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
@@ -180,13 +253,15 @@ public class UserController {
             return "profileSetting";  // Stay on the change password page if password is incorrect
         }
 
-        loggedInUser.setPassword(newPassword);
+        // Change the password in MapRepo
+        String redisKey = "user:" + loggedInUser.getUsername();
+        mapRepo.create(redisKey, "password", newPassword);
+
+        loggedInUser.setPassword(newPassword);  // Update the session with the new password
         session.setAttribute("loggedInUser", loggedInUser);
-
         model.addAttribute("message", "Password changed successfully.");
-        return "profile";  // Redirect to the profile page after password change
+        return "redirect:/user/profile";  // Redirect to the profile page after password change
     }
-
 
     // user to log out from session and their account
     @GetMapping("/logout")
@@ -195,10 +270,4 @@ public class UserController {
         return "redirect:/event/home";
     }
 
-    // to see the saved list of usernames and passwords
-    @GetMapping("/all-users")
-    @ResponseBody
-    public List<User> getAllUsers() {
-        return users; 
-    }
 }
