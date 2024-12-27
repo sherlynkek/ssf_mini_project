@@ -53,6 +53,17 @@ public class UserController {
         // Create Redis key for the user
         String redisKey = "user:" + user.getUsername();
         
+        // Check if username or email already exists
+        if (mapRepo.keyExists(redisKey, "username")) {
+            model.addAttribute("message", "Username already exists. Please choose a different one.");
+            return "register";
+        }
+
+        if (mapRepo.isEmailTaken("email", user.getEmail())) {
+            model.addAttribute("message", "Email already exists. Please choose a different one.");
+            return "register";
+        }
+
         // Store all user details in one hash
         mapRepo.create(redisKey, "username", user.getUsername());
         mapRepo.create(redisKey, "password", user.getPassword());

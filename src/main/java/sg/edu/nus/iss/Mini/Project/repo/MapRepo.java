@@ -40,6 +40,10 @@ public class MapRepo {
         return redisTemplate.opsForHash().hasKey(redisKey, hashKey);
     }
 
+    public boolean isEmailTaken(String setKey, String email) {
+        return redisTemplate.opsForSet().isMember(setKey, email);
+    }
+
     // Retrieve all events for a particular key
     public Map<Object, Object> getAllEvents(String redisKey) {
         return redisTemplate.opsForHash().entries(redisKey);
