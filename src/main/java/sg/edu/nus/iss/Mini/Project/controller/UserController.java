@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.Mini.Project.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -128,6 +129,7 @@ public class UserController {
             preferredEvents = eventService.getEventsByIds(preferredEventIds);
         }
 
+        preferredEvents.sort(Comparator.comparing(Event::getDate));
         model.addAttribute("preferredEvents", preferredEvents);
         return "profile";
     }
