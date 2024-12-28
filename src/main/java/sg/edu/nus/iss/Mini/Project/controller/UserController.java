@@ -46,7 +46,7 @@ public class UserController {
 
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
-        if (result.hasErrors()) {
+        if(result.hasErrors()) {
             return "register"; // Return the form if validation fails
         }
     
@@ -54,12 +54,12 @@ public class UserController {
         String redisKey = "user:" + user.getUsername();
         
         // Check if username or email already exists
-        if (mapRepo.keyExists(redisKey, "username")) {
+        if(mapRepo.keyExists(redisKey, "username")) {
             model.addAttribute("message", "Username already exists. Please choose a different one.");
             return "register";
         }
 
-        if (mapRepo.isEmailTaken("email", user.getEmail())) {
+        if(mapRepo.isEmailTaken("email", user.getEmail())) {
             model.addAttribute("message", "Email already exists. Please choose a different one.");
             return "register";
         }
@@ -90,7 +90,7 @@ public class UserController {
         String redisKey = "user:" + username;
         String storedPassword = (String) mapRepo.get(redisKey, "password");
 
-        if (storedPassword == null || !storedPassword.equals(password)) {
+        if(storedPassword == null || !storedPassword.equals(password)) {
             model.addAttribute("message", "Invalid username or password.");
             return "login";  // Return to login page if authentication fails
         }
@@ -110,7 +110,7 @@ public class UserController {
     @GetMapping("/profile")
     public String userProfile(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+        if(loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
@@ -124,7 +124,7 @@ public class UserController {
         .collect(Collectors.toList()); 
         
         List<Event> preferredEvents = new ArrayList<>();
-        if (preferredEventIds != null && !preferredEventIds.isEmpty()) {
+        if(preferredEventIds != null && !preferredEventIds.isEmpty()) {
             preferredEvents = eventService.getEventsByIds(preferredEventIds);
         }
 
@@ -136,12 +136,12 @@ public class UserController {
     @PostMapping("/interest/{eventId}")
     public String addEventToFavorites(@PathVariable("eventId") String eventId, HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+        if(loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
         String redisKey = loggedInUser.getUsername() + "_preferredEvents";
-        if (!mapRepo.keyExists(redisKey, eventId)) {
+        if(!mapRepo.keyExists(redisKey, eventId)) {
             mapRepo.create(redisKey, eventId, eventId); // Use the eventId as both key and value for simplicity
         }
 
@@ -153,15 +153,16 @@ public class UserController {
     @GetMapping("/remove-interest/{eventId}")
     public String removeEventFromFavorites(@PathVariable("eventId") String eventId, HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+        if(loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
         String redisKey = loggedInUser.getUsername() + "_preferredEvents";
-        if (mapRepo.keyExists(redisKey, eventId)) {
+        if(mapRepo.keyExists(redisKey, eventId)) {
             mapRepo.delete(redisKey, eventId);
             model.addAttribute("message", "Event removed from your preferences.");
-        } else {
+        } 
+        else {
             model.addAttribute("message", "Event not found in your preferences.");
         }
 
@@ -172,7 +173,7 @@ public class UserController {
     @GetMapping("/update-profile")
     public String showUpdateProfilePage(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+        if(loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
@@ -183,7 +184,7 @@ public class UserController {
     @PostMapping("/update-profile")
     public String updateProfile(@ModelAttribute("user") User updatedUser, HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+        if(loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
@@ -191,13 +192,13 @@ public class UserController {
         String newUsername = updatedUser.getUsername();
 
         // If the username has changed, update Redis keys
-        if (!oldUsername.equals(newUsername)) {
+        if(!oldUsername.equals(newUsername)) {
             // Transfer preferred events to the new username
             String oldPreferredEventsKey = oldUsername + "_preferredEvents";
             String newPreferredEventsKey = newUsername + "_preferredEvents";
 
             Map<Object, Object> oldEvents = mapRepo.getAllEvents(oldPreferredEventsKey);
-            if (oldEvents != null && !oldEvents.isEmpty()) {
+            if(oldEvents != null && !oldEvents.isEmpty()) {
                 List<String> eventIds = new ArrayList<>();
                 List<String> eventDetails = new ArrayList<>();
                 oldEvents.forEach((eventId, eventDetail) -> {
@@ -241,7 +242,7 @@ public class UserController {
     @GetMapping("/change-password")
     public String showChangePasswordPage(HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+        if(loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
@@ -253,11 +254,11 @@ public class UserController {
                                  @RequestParam("newPassword") String newPassword,
                                  HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+        if(loggedInUser == null) {
             return "redirect:/user/login";  // Redirect to login if not logged in
         }
 
-        if (!loggedInUser.getPassword().equals(currentPassword)) {
+        if(!loggedInUser.getPassword().equals(currentPassword)) {
             model.addAttribute("message", "Current password is incorrect.");
             return "profileSetting";  // Stay on the change password page if password is incorrect
         }
@@ -269,6 +270,7 @@ public class UserController {
         loggedInUser.setPassword(newPassword);  // Update the session with the new password
         session.setAttribute("loggedInUser", loggedInUser);
         model.addAttribute("message", "Password changed successfully.");
+        
         return "redirect:/user/profile";  // Redirect to the profile page after password change
     }
 
@@ -276,6 +278,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
+        
         return "redirect:/event/home";
     }
 

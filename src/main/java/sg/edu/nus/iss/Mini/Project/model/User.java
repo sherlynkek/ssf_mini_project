@@ -1,7 +1,5 @@
 package sg.edu.nus.iss.Mini.Project.model;
 
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -20,13 +18,9 @@ public class User {
     private String email;
 
 
-    // Create a BCrypt password encoder instance
-    // private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
-        // this.password = passwordEncoder.encode(password);
         this.email = email;
     }
 
@@ -63,8 +57,4 @@ public class User {
         return username + "," + password + "," + email;
     }
 
-    /* public boolean checkPassword(String password) {
-        return passwordEncoder.matches(password, this.password);  // Check hashed password during login
-    } */
-    
 }

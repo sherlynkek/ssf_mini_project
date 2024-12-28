@@ -2,8 +2,9 @@ package sg.edu.nus.iss.Mini.Project.controller;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,120 +57,117 @@ public class EventController {
                             @RequestParam(name = "sortOption", required = false) String sortOption,
                             @RequestParam(name = "searchQuery", required = false) String searchQuery,
                             Model model) {
-    // Fetch all events initially
-    List<Event> allEvents = eventService.getAllEvent();
-    List<Event> filteredEvents = new ArrayList<>();
+        // Fetch all events initially
+        List<Event> allEvents = eventService.getAllEvent();
+        List<Event> filteredEvents = new ArrayList<>();
 
-    // Apply classification filter
-    if (classification != null && !classification.isEmpty()) {
-        for (Event event : allEvents) {
-            if (classification.equals(event.getClassificationName())) {
+        // Apply classification filter
+        for(Event event : allEvents) {
+            if(classification == null || classification.isEmpty() || 
+                classification.equals(event.getClassificationName())) {
+                
                 filteredEvents.add(event);
             }
         }
-    } 
-    else {
-        filteredEvents = allEvents; // If no classification filter, show all events
-    }
 
-    // Apply search filter
-    if (searchQuery != null && !searchQuery.isEmpty()) {
-        List<Event> searchFilteredEvents = new ArrayList<>();
-        for (Event event : filteredEvents) {
-            if (event.getAttractionName() != null && 
-                event.getAttractionName().toLowerCase().contains(searchQuery.toLowerCase())) {
-                searchFilteredEvents.add(event);
+        // Apply search filter
+        if(searchQuery != null && !searchQuery.isEmpty()) {
+            List<Event> searchFilteredEvents = new ArrayList<>();
+            for(Event event : filteredEvents) {
+                if(event.getAttractionName() != null && 
+                   event.getAttractionName().toLowerCase().contains(searchQuery.toLowerCase())) {
+                
+                    searchFilteredEvents.add(event);
+                }
             }
+            filteredEvents = searchFilteredEvents;
         }
-        filteredEvents = searchFilteredEvents;
-    }
-    // Apply sorting only if a valid sort option is provided
-    if (sortOption != null && !sortOption.isEmpty()) {
-        switch (sortOption) {
-            case "price-low-high":
-                filteredEvents.sort(new Comparator<Event>() {
-                    @Override
-                    public int compare(Event e1, Event e2) {
-                        Double price1 = e1.getTicketPriceLow();
-                        Double price2 = e2.getTicketPriceLow();
-                        if (price1 == null && price2 == null) {
-                            return 0;
-                        } else if (price1 == null) {
-                            return 1; // Nulls last
-                        } else if (price2 == null) {
-                            return -1; // Nulls last
-                        } else {
+
+        // Apply sorting
+        if(sortOption != null && !sortOption.isEmpty()) {
+            // Apply selected sort option
+            switch(sortOption) {
+                case "price-low-high":
+                    filteredEvents.sort(new Comparator<Event>() {
+                        @Override
+                        public int compare(Event e1, Event e2) {
+                            Double price1 = e1.getTicketPriceLow();
+                            Double price2 = e2.getTicketPriceLow();
+                            if(price1 == null && price2 == null) return 0;
+                            if(price1 == null) return 1; // Nulls last
+                            if(price2 == null) return -1; // Nulls last
+                            
                             return price1.compareTo(price2);
                         }
-                    }
-                });
-                break;
-        
-            case "price-high-low":
-                filteredEvents.sort(new Comparator<Event>() {
-                    @Override
-                    public int compare(Event e1, Event e2) {
-                        Double price1 = e1.getTicketPriceLow();
-                        Double price2 = e2.getTicketPriceLow();
-                        if (price1 == null && price2 == null) {
-                            return 0;
-                            } else if (price1 == null) {
-                            return 1; // Nulls last
-                        } else if (price2 == null) {
-                            return -1; // Nulls last
-                        } else {
+                    });
+                    break;
+
+                case "price-high-low":
+                    filteredEvents.sort(new Comparator<Event>() {
+                        @Override
+                        public int compare(Event e1, Event e2) {
+                            Double price1 = e1.getTicketPriceLow();
+                            Double price2 = e2.getTicketPriceLow();
+                            if(price1 == null && price2 == null) return 0;
+                            if(price1 == null) return 1; // Nulls last
+                            if(price2 == null) return -1; // Nulls last
+                            
                             return price2.compareTo(price1); // Reversed order
                         }
-                    }
-                });
-                break;
-        
-            case "name-a-z":
-                filteredEvents.sort(new Comparator<Event>() {
-                    @Override
-                    public int compare(Event e1, Event e2) {
-                        String name1 = e1.getAttractionName();
-                        String name2 = e2.getAttractionName();
-                        if (name1 == null && name2 == null) {
-                            return 0;
-                        } else if (name1 == null) {
-                            return 1; // Nulls last
-                        } else if (name2 == null) {
-                            return -1; // Nulls last
-                        } else {
+                    });
+                    break;
+
+                case "name-a-z":
+                    filteredEvents.sort(new Comparator<Event>() {
+                        @Override
+                        public int compare(Event e1, Event e2) {
+                            String name1 = e1.getAttractionName();
+                            String name2 = e2.getAttractionName();
+                            if(name1 == null && name2 == null) return 0;
+                            if(name1 == null) return 1; // Nulls last
+                            if(name2 == null) return -1; // Nulls last
+                            
                             return name1.compareToIgnoreCase(name2);
                         }
-                    }
-                });
-                 break;
-        
-            case "name-z-a":
-                filteredEvents.sort(new Comparator<Event>() {
-                    @Override
-                    public int compare(Event e1, Event e2) {
-                        String name1 = e1.getAttractionName();
-                        String name2 = e2.getAttractionName();
-                        if (name1 == null && name2 == null) {
-                            return 0;
-                        } else if (name1 == null) {
-                            return 1; // Nulls last
-                        } else if (name2 == null) {
-                            return -1; // Nulls last
-                        } else {
+                    });
+                    break;
+
+                case "name-z-a":
+                    filteredEvents.sort(new Comparator<Event>() {
+                        @Override
+                        public int compare(Event e1, Event e2) {
+                            String name1 = e1.getAttractionName();
+                            String name2 = e2.getAttractionName();
+                            if(name1 == null && name2 == null) return 0;
+                            if(name1 == null) return 1; // Nulls last
+                            if(name2 == null) return -1; // Nulls last
+                            
                             return name2.compareToIgnoreCase(name1); // Reversed order
                         }
-                    }
-                });
-                break;
-        
-            default:
-                break;
+                    });
+                    break;
+
+                default:
+                    break;
+            }
+        } 
+        else {
+            // Default sorting by date (closest first) if no sort option is selected
+            filteredEvents.sort(new Comparator<Event>() {
+                @Override
+                public int compare(Event e1, Event e2) {
+                    if(e1.getDate() == null && e2.getDate() == null) return 0;
+                    if(e1.getDate() == null) return 1; // Nulls last
+                    if(e2.getDate() == null) return -1; // Nulls last
+                    
+                    return e1.getDate().compareTo(e2.getDate());
+                }
+            });
         }
-    }
 
         // Add data to the model
         model.addAttribute("events", filteredEvents);
-        model.addAttribute("classifications", getAvailableClassifications(filteredEvents));
+        model.addAttribute("classifications", getAvailableClassifications(allEvents));
         model.addAttribute("sortOption", sortOption);
         model.addAttribute("searchQuery", searchQuery);
 
@@ -177,11 +175,13 @@ public class EventController {
         return "eventHome";
     }
 
-    // Helper method to extract available classifications from the filtered events (if needed)
-    private List<String> getAvailableClassifications(List<Event> events) {
-        return events.stream()
-            .map(Event::getClassificationName)
-            .distinct()
-            .collect(Collectors.toList());
+    private Set<String> getAvailableClassifications(List<Event> events) {
+        Set<String> classifications = new HashSet<>();
+        for(Event event : events) {
+            if(event.getClassificationName() != null) {
+                classifications.add(event.getClassificationName());
+            }
+        }
+        return classifications;
     }
 }

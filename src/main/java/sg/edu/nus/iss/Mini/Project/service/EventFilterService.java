@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.Mini.Project.service;
 
 import java.io.StringReader;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,11 @@ public class EventFilterService {
             JsonArray jArrayImage = jObjectRecord.getJsonArray("images");
             JsonObject jObjectImage = jArrayImage.getJsonObject(0);
             String imageURL = jObjectImage.getString("url");
+
+            // date
+            JsonObject jObjectDate = jObjectRecord.getJsonObject("dates");
+            JsonObject jObjectDates = jObjectDate.getJsonObject("start");
+            String localDate = jObjectDates.getString("localDate");
         
             // classification
             JsonArray jArrayClass = jObjectRecord.getJsonArray("classifications");
@@ -69,6 +75,7 @@ public class EventFilterService {
             Event events = new Event();
  
             events.setEventName(jObjectRecord.getString("name"));
+            events.setDate(LocalDate.parse(localDate));
             events.setImageUrl(imageURL);
             events.setClassificationName(classType);
             events.setTicketPriceHigh(priceHigh);

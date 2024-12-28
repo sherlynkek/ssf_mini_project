@@ -4,114 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 35px;
+            padding: 10px;
+            margin-left: 15px;
+        }
+
+        .nav-item {
+            font-size: 15px;
+            text-transform: uppercase;
+            line-height: 4;
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container my-5">
-        <!-- Heading -->
-        <h1 class="text-center mb-4">Happening Events</h1>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Brand and Logo -->
+            <a class="navbar-brand" href="/event/home">Spot'N'Go</a>
 
-        <!-- Registration and Login Buttons -->
-        <div class="text-center mb-5" th:if="${session.loggedInUser == null}">
-            <a href="/user/register" class="btn btn-primary mx-2">Register</a>
-            <a href="/user/login" class="btn btn-secondary mx-2">Login</a>
-        </div>
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <!-- Registration and Login Buttons (only when logged out) -->
+                    <li class="nav-item" th:if="${session.loggedInUser == null}">
+                        <a class="nav-link active" aria-current="page" href="/event/home">Home</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser == null}">
+                        <a class="nav-link active" href="/user/register">Register</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser == null}">
+                        <a class="nav-link active" href="/user/login">Login</a>  
+                    </li>
 
-        <!-- Profile and Logout Buttons (only when logged in) -->
-        <div class="text-center mb-5" th:if="${session.loggedInUser != null}">
-            <a href="/user/profile" class="btn btn-primary mx-2">Profile</a>
-            <a href="/user/logout" class="btn btn-danger mx-2">Logout</a>
-        </div>
+                    <!-- Profile and Logout Buttons (only when logged in) -->
+                    <li class="nav-item" th:if="${session.loggedInUser != null}">
+                        <a class="nav-link active" aria-current="page" href="/event/home">Home</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser != null}">
+                        <a class="nav-link active" href="/user/profile">Profile</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser != null}">
+                        <a class="nav-link active" href="/user/logout">Logout</a>  
+                    </li>
+                </ul>
+            </div>
 
-        <!-- Filter Form -->
-        <form action="/event/filter" method="get" class="mb-4">
-            <div class="row justify-content-center align-items-center g-3">
+            <!-- Filter Form in Navbar -->
+            <form class="d-flex" action="/event/filter" method="get" id="filterForm">
                 <!-- Search Box -->
-                <div class="col-auto">
-                    <label for="searchQuery" class="form-label">Search:</label>
-                    <input type="text" id="searchQuery" name="searchQuery" 
-                           class="form-control" 
-                           placeholder="Search by name">
-                </div>
+                <input class="form-control me-2" type="search" placeholder="Search by Name" aria-label="Search" name="searchQuery" onchange="submitForm()">
+
                 <!-- Classification Dropdown -->
-                <div class="col-auto">
-                    <label for="classification" class="form-label">Classification:</label>
-                    <select id="classification" name="classification" class="form-select">
-                        <option value="" th:selected="${classification == null || classification == ''}">All</option>
-                        <option value="Arts & Theatre" th:selected="${classification == 'Arts & Theatre'}">Arts & Theatre</option>
-                        <option value="Miscellaneous" th:selected="${classification == 'Miscellaneous'}">Miscellaneous</option>
-                        <option value="Music" th:selected="${classification == 'Music'}">Music</option>
-                        <option value="Sports" th:selected="${classification == 'Sports'}">Sports</option>
-                    </select>
-                </div>
+                <select class="form-select me-2" name="classification" onchange="submitForm()">
+                    <option value="" th:selected="${classification == null || classification == ''}">All</option>
+                    <option value="Arts & Theatre" th:selected="${classification == 'Arts & Theatre'}">Arts & Theatre</option>
+                    <option value="Miscellaneous" th:selected="${classification == 'Miscellaneous'}">Miscellaneous</option>
+                    <option value="Music" th:selected="${classification == 'Music'}">Music</option>
+                    <option value="Sports" th:selected="${classification == 'Sports'}">Sports</option>
+                </select>
+            </form>
+        </div>
+    </nav>
 
-                <!-- Sorting Dropdown -->
-                <div class="col-auto">
-                    <label for="sortOption" class="form-label">Sort By:</label>
-                    <select id="sortOption" name="sortOption" class="form-select">
-                        <option value="" th:selected="${sortOption == ''}">None</option>
-                        <option value="price-low-high" th:selected="${sortOption == 'price-low-high'}">Price (Low to High)</option>
-                        <option value="price-high-low" th:selected="${sortOption == 'price-high-low'}">Price (High to Low)</option>
-                        <option value="name-a-z" th:selected="${sortOption == 'name-a-z'}">Name (A-Z)</option>
-                        <option value="name-z-a" th:selected="${sortOption == 'name-z-a'}">Name (Z-A)</option>
-                    </select>
-                </div>
+    <!-- Header Section -->
+    <header class="text-center" style="background-image: url('/images/excited-crowd-cheering-stockcake.jpg'); background-size: cover; color: white; height: 70vh; display: flex; justify-content: center; align-items: center;">
+        <h1 class="display-4" style="font-weight: bold; font-size: 70px;">Happening Events</h1>
+    </header>
 
-                <!-- Submit Button -->
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-success">Apply Filters</button>
+    <!-- Sort Form -->
+    <form id="sortForm" action="/event/filter" method="get">
+        <!-- Hidden input for the search query -->
+        <input type="hidden" name="searchQuery" th:value="${searchQuery}">
+        <!-- Hidden input for the classification filter -->
+        <input type="hidden" name="classification" th:value="${classification}">
+        
+        <!-- Sorting Dropdown -->
+        <label for="sortOption" class="form-label">Sort By:</label>
+        <select id="sortOption" name="sortOption" class="form-select" onchange="this.form.submit()">
+            <option value="" th:selected="${sortOption == ''}">None</option>
+            <option value="price-low-high" th:selected="${sortOption == 'price-low-high'}">Price (Low to High)</option>
+            <option value="price-high-low" th:selected="${sortOption == 'price-high-low'}">Price (High to Low)</option>
+            <option value="name-a-z" th:selected="${sortOption == 'name-a-z'}">Name (A-Z)</option>
+            <option value="name-z-a" th:selected="${sortOption == 'name-z-a'}">Name (Z-A)</option>
+        </select>
+    </form>
+
+    <!-- Filtered Events Table -->
+    <div th:if="${events}">
+        <table class="table table-striped table-bordered mb-5">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Image</th>
+                    <th>Classification</th>
+                    <th>Date</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <th:block th:each="event : ${events}">
+                    <tr>
+                        <td th:text="${event.eventName}"></td>
+                        <td>
+                            <a th:href="@{/event/{eventId}(eventId=${event.id})}">
+                                <img th:src="${event.imageUrl}" class="card-img-top img-fluid" width="50" height="50">
+                            </a>
+                        </td>
+                        <td th:text="${event.classificationName}"></td>
+                        <td th:utext="${event.date}"></td>
+                        <td th:text="${event.ticketPriceLow}"></td>
+                    </tr>
+                </th:block>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Event List Display -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <span th:each="event : ${eventsList}" class="col">
+            <div class="card h-100 shadow-sm">
+                <a th:href="@{/event/{eventId}(eventId=${event.id})}">
+                    <img th:src="${event.imageUrl}" class="card-img-top img-fluid" width="25" height="25">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title" th:utext="${event.eventName}">Event Name</h5>
+                    <h6 class="card-title" th:utext="${event.date}">Event Date</h6>
                 </div>
             </div>
-        </form>
-
-        <!-- Filtered Events Table -->
-        <div th:if="${events}">
-            <a href="/event/home" class="btn btn-outline-secondary mb-3">Clear Filters</a>
-
-            <table class="table table-striped table-bordered mb-5">
-                <thead>
-                    <tr>
-                        <th>Event Name</th>
-                        <th>Image</th>
-                        <th>Classification</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <th:block th:each="event : ${events}">
-                        <tr>
-                            <td th:text="${event.eventName}"></td>
-                            <td>
-                                <a th:href="@{/event/{eventId}(eventId=${event.id})}">
-                                    <img th:src="${event.imageUrl}" class="card-img-top img-fluid" width="100" height="100">
-                                </a>
-                            </td>
-                            <td th:text="${event.classificationName}"></td>
-                            <td th:text="${event.ticketPriceLow}"></td>
-                        </tr>
-                    </th:block>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Event List -->
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <span th:each="event : ${eventsList}" class="col">
-                <div class="card h-100 shadow-sm">
-                    <a th:href="@{/event/{eventId}(eventId=${event.id})}">
-                        <img th:src="${event.imageUrl}" class="card-img-top img-fluid" width="50" height="50">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title" th:utext="${event.eventName}">Event Name</h5>
-                        <h6 class="card-title" th:utext="${event.date}">Event Date</h6>
-                    </div>
-                </div>
-            </span>
-        </div>
+        </span>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Automatically submit the filter form when an option is changed
+        function submitForm() {
+            document.getElementById('filterForm').submit();
+        }
+    </script>
 </body>
+
 </html>
 
 

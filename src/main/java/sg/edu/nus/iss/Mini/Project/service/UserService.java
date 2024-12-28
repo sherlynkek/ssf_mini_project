@@ -41,7 +41,7 @@ public class UserService {
         String password = (String) mapRepo.get(REDIS_KEY, username);  // Retrieve password from Redis
         String email = (String) mapRepo.get(REDIS_KEY, username + "_email");  // Retrieve email
 
-        if (password == null || email == null) {
+        if(password == null || email == null) {
             return null;  // User not found
         }
 

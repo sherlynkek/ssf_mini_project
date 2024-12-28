@@ -35,9 +35,14 @@ public class CalendarController {
                 "VERSION:2.0\n" +
                 "BEGIN:VEVENT\n" +
                 "UID:" + event.getId() + "\n" +
-                "DTSTAMP:" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'")) + "\n" +
-                "DTSTART;VALUE=DATE:" + eventDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "\n" +
-                "DTEND;VALUE=DATE:" + eventDate.plusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "\n" +  // The event ends the next day, signifying an all-day event
+                "DTSTAMP:" + 
+                LocalDateTime.now()
+                             .format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'")) + "\n" +
+                "DTSTART;VALUE=DATE:" + 
+                eventDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "\n" +
+                "DTEND;VALUE=DATE:" + 
+                eventDate.plusDays(1)
+                         .format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "\n" +  // The event ends the next day, signifying an all-day event
                 "SUMMARY:" + event.getEventName() + "\n" +
                 "LOCATION:" + event.getVenueName() + "\n" +
                 "DESCRIPTION:Enjoy the event!\n" +

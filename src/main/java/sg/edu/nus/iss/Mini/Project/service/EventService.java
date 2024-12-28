@@ -28,10 +28,8 @@ public class EventService {
     public List<Event> getAllEvent() {
         
         List<Event> event = new ArrayList<>();
-        // System.out.println(Utility.eventUrl);
 
         String url = Utility.eventUrl + apiKey;
-        // System.out.println(url); 
 
         String eventData = template.getForObject(url, String.class);
 
@@ -62,10 +60,6 @@ public class EventService {
 
             // ticketing price range (low and high)
             JsonArray jArrayTix = jObjectRecord.getJsonArray("priceRanges");
-            // System.out.println(i);
-            // System.out.println(jArrayTix == null);
-            // System.out.println(jObjectRecord.containsKey("priceRanges"));
-            // JsonObject jObjectTix = jArrayTix.getJsonObject(0);
             Double priceLow = null;
             Double priceHigh = null;
             if(jArrayTix != null && !jArrayTix.isEmpty()) {
@@ -84,7 +78,6 @@ public class EventService {
                     JsonObject jObjectVenue = jArrayVenue.getJsonObject(0);
                     venueName = jObjectVenue.getString("name");
                     venueURL = jObjectVenue.containsKey("url") ? jObjectVenue.getString("url") : null;
-                    // venueURL = jObjectVenue.getString("url", "No url provided");
                 }
             }
                               
@@ -118,7 +111,6 @@ public class EventService {
         .queryParam("apikey", apiKey)
         .build(id)
         .toString();
-        // System.out.println(url);
         
         ResponseEntity<String> res = template.getForEntity(url, String.class);
         JsonReader reader = Json.createReader(new StringReader(res.getBody()));
@@ -187,13 +179,14 @@ public class EventService {
     public List<Event> getEventsByIds(List<String> eventIds) {
         List<Event> events = new ArrayList<>();
 
-        for (String eventId : eventIds) {
+        for(String eventId : eventIds) {
             try {
                 Event event = getEventFromId(eventId);
-                if (event != null) {
+                if(event != null) {
                     events.add(event);
                 }
-            } catch (Exception e) {
+            } 
+            catch (Exception e) {
                 // Log and skip any errors for invalid IDs
                 System.err.println("Error fetching event with ID: " + eventId);
                 e.printStackTrace();
