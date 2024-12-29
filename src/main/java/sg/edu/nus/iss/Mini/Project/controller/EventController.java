@@ -181,4 +181,8 @@ public class EventController {
         return classifications;
     }
 
+    @GetMapping("/restapi")
+    public String getApiPage() {
+        return "restapi";
+    }
 }
