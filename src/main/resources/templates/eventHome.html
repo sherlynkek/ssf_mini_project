@@ -135,49 +135,49 @@
     </div>
 
     <!-- Filtered Events Table -->
-<div th:if="${events}" class="container table-container">
-    <h2 class="text-center mb-4">Filtered Events</h2>
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>Event Name</th>
-                <th>Image</th>
-                <th>Classification</th>
-                <th>Date</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Loop through each event in the filtered list -->
-            <th:block th:each="event : ${events}">
+    <div th:if="${events}" class="container table-container">
+        <h2 class="text-center mb-4">Filtered Events</h2>
+        <table class="table table-striped table-bordered">
+            <thead>
                 <tr>
-                    <!-- Event Name -->
-                    <td th:text="${event.eventName}"></td>
-                    
-                    <!-- Event Image -->
-                    <td>
-                        <a th:href="@{/event/{eventId}(eventId=${event.id})}">
-                            <img th:src="${event.imageUrl}" 
-                                 class="img-fluid event-img" 
-                                 alt="Event Image" 
-                                 th:if="${event.imageUrl != null}" />
-                            <span th:if="${event.imageUrl == null}">No image available</span>
-                        </a>
-                    </td>
-                    
-                    <!-- Event Classification -->
-                    <td th:text="${event.classificationName}"></td>
-                    
-                    <!-- Event Date -->
-                    <td th:utext="${event.date}"></td>
-                    
-                    <!-- Event Price -->
-                    <td th:text="${event.ticketPriceLow}"></td>
+                    <th>Event Name</th>
+                    <th>Image</th>
+                    <th>Classification</th>
+                    <th>Date</th>
+                    <th>Price</th>
                 </tr>
-            </th:block>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                <!-- Loop through each event in the filtered list -->
+                <th:block th:each="event : ${events}">
+                    <tr>
+                        <!-- Event Name -->
+                        <td th:text="${event.eventName}"></td>
+                        
+                        <!-- Event Image -->
+                        <td>
+                            <a th:href="@{/event/{eventId}(eventId=${event.id})}">
+                                <img th:src="${event.imageUrl}" 
+                                    class="img-fluid event-img" 
+                                    alt="Event Image" 
+                                    th:if="${event.imageUrl != null}" />
+                                <span th:if="${event.imageUrl == null}">No image available</span>
+                            </a>
+                        </td>
+                        
+                        <!-- Event Classification -->
+                        <td th:text="${event.classificationName}"></td>
+                        
+                        <!-- Event Date -->
+                        <td th:utext="${event.date}"></td>
+                        
+                        <!-- Event Price -->
+                        <td th:text="${event.ticketPriceLow}"></td>
+                    </tr>
+                </th:block>
+            </tbody>
+        </table>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
