@@ -7,52 +7,196 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-
+        /* Base Font Size and Layout */
         .navbar-brand {
             font-weight: bold;
-            font-size: 35px;
+            font-size: 2rem; /* Adjusted to relative units */
             padding: 10px;
             margin-left: 15px;
         }
-
+    
         .nav-item {
-            font-size: 15px;
+            font-size: 1rem;
             text-transform: uppercase;
             line-height: 4;
             margin-right: 5px;
         }
 
+        /* Increase the size of the search bar */
+        .search-bar {
+        width: 300px; /* Increase width */
+        height: 45px; /* Increase height */
+        font-size: 18px; /* Larger font size */
+        }
+
+        /* Optional: Add some padding and space between filter options */
+        .navbar-nav .nav-item {
+            margin-right: 15px;
+        }
+
+        /* Fix Dropdown Menu Position */
+        .dropdown-menu {
+            position: absolute !important;  /* Ensure it is positioned correctly */
+            top: 100%; /* Align below the "Filter Events" button */
+            left: 0;  /* Align with the dropdown toggle button */
+            z-index: 1050; /* Ensure dropdown is on top */
+        }
+    
+        .hero-section {
+            background-image: url('/images/excited-crowd.jpg');
+            background-size: cover;
+            color: white;
+            height: 45vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center; /* Center text */
+        }
+    
+        .filter-sort-section {
+            margin: 20px 0;
+        }
+    
+        .event-img {
+            object-fit: cover;
+            height: 200px;
+            width: 100%;
+        }
+    
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem; /* Smaller font size for mobile */
+            }
+    
+            .nav-item {
+                font-size: 0.9rem; /* Adjust font size for nav items */
+            }
+    
+            .hero-section h1 {
+                font-size: 2rem; /* Adjust font size for smaller screens */
+            }
+    
+            .card-body {
+                height: auto; /* Allow more space for content on small screens */
+            }
+    
+            .event-img {
+                height: 150px; /* Smaller images on small screens */
+            }
+        }
+    
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.2rem; /* Even smaller font size for very small screens */
+            }
+    
+            .nav-item {
+                font-size: 0.8rem; /* Further reduced font size */
+            }
+    
+            .hero-section h1 {
+                font-size: 1.5rem; /* Adjust further for very small screens */
+            }
+    
+            .event-img {
+                height: 120px; /* Even smaller images on very small screens */
+            }
+        }
+    
         .profile-header {
             text-align: center;
             margin-bottom: 40px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
         }
-
+    
         .profile-header h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: bold;
         }
-
-        .btn-group {
+    
+        .btn-group a {
+            margin: 5px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            transition: transform 0.2s ease-in-out;
+        }
+    
+        .btn-group a:hover {
+            transform: scale(1.1);
+        }
+    
+        .preferred-events {
             margin-top: 20px;
         }
-
-        .preferred-events .list-group-item {
+    
+        .preferred-events .event-card {
             display: flex;
             align-items: center;
-            padding: 15px;
+            margin-bottom: 20px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
-
-        .preferred-events img {
+    
+        .preferred-events .event-card img {
             width: 150px;
-            height: 100px;
             object-fit: cover;
         }
-
+    
+        .preferred-events .event-details {
+            flex: 1;
+            padding: 20px;
+        }
+    
+        .preferred-events .event-details h5 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+    
+        .preferred-events .event-details p {
+            margin: 5px 0;
+            color: #555;
+        }
+    
+        .preferred-events .event-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+    
+        .preferred-events .event-actions a {
+            margin: 5px 0;
+            width: 90%;
+            text-align: center;
+        }
+    
         .countdown {
             font-weight: bold;
-            font-size: 14px;
+            font-size: 1rem;
+            color: #ff4757;
+        }
+
+        footer {
+            font-size: 0.9rem;
+        }
+
+        footer h5 {
+            font-weight: bold;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        footer a:hover {
+            color: #007bff;
         }
     </style>
 </head>
@@ -121,29 +265,55 @@
         <!-- Preferred Events Section -->
         <hr>
         <h2>Your Preferred Events</h2>
-            <div th:if="${preferredEvents.isEmpty()}" class="text-center">
-                <p class="text-muted">You have not saved any events yet.</p>
+        <div th:if="${preferredEvents.isEmpty()}" class="text-center">
+            <p class="text-muted">You have not saved any events yet.</p>
+        </div>
+        <div th:unless="${preferredEvents.isEmpty()}" class="preferred-events">
+            <div class="event-card" th:each="event : ${preferredEvents}">
+                <a th:href="@{/event/{eventId}(eventId=${event.id})}">
+                    <img th:src="${event.imageUrl}" width="200" height="100">
+                </a>
+                <div class="event-details">
+                    <h5 th:text="${event.attractionName}"></h5>
+                    <p><strong>Location: </strong><span th:text="${event.venueName}"></span></p>
+                    <p><strong>Date: </strong><span th:text="${event.date}"></span></p>
+                    <p class="countdown" th:attr="data-date=${event.date}"></p>
+                </div>
+                <div class="event-actions">
+                    <a th:href="@{/user/remove-interest/{eventId}(eventId=${event.id})}" class="btn btn-danger btn-sm">Remove</a>
+                    <a th:href="@{/event/{eventId}/download-calendar(eventId=${event.id})}" class="btn btn-primary btn-sm">Save to Calendar</a>
+                </div>
             </div>
-            <div th:unless="${preferredEvents.isEmpty()}" class="preferred-events">
-                <ul class="list-group">
-                    <li class="list-group-item" th:each="event : ${preferredEvents}">
-                        <a th:href="@{/event/{eventId}(eventId=${event.id})}">
-                            <img th:src="${event.imageUrl}" alt="Event Image" class="img-thumbnail me-3">
-                        </a>
-                        <div>
-                            <h5 th:text="${event.attractionName}"></h5>
-                            <p>Date: <span th:text="${event.date}"></span></p>
-                            <p>Location: <span th:text="${event.venueName}"></span></p>
-                            <a th:href="@{/user/remove-interest/{eventId}(eventId=${event.id})}" class="btn btn-danger btn-sm">Remove</a>
-                            <a th:href="@{/event/{eventId}/download-calendar(eventId=${event.id})}" class="btn btn-primary btn-sm ms-2">Save to Calendar</a>
-                        </div>
-                        <div class="ms-auto text-end">
-                            <p class="countdown" th:attr="data-date=${event.date}"></p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+        </div>
     </div>
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="container p-4">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">About Spot'N'Go</h5>
+                    <p>
+                        Spot'N'Go is your ultimate destination for discovering and attending exciting events. 
+                        Find your next experience and make unforgettable memories with us.
+                    </p>
+                </div>
+    
+                <!-- Links Section -->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Quick Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        <div class="text-center p-3 bg-dark text-light">
+            © 2024 Spot'N'Go. All rights reserved.
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>

@@ -6,28 +6,118 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-
+        /* Base Font Size and Layout */
         .navbar-brand {
             font-weight: bold;
-            font-size: 35px;
+            font-size: 2rem; /* Adjusted to relative units */
             padding: 10px;
             margin-left: 15px;
         }
 
         .nav-item {
-            font-size: 15px;
+            font-size: 1rem;
             text-transform: uppercase;
             line-height: 4;
             margin-right: 5px;
         }
 
+        /* Increase the size of the search bar */
+        .search-bar {
+            width: 300px; /* Increase width */
+            height: 45px; /* Increase height */
+            font-size: 18px; /* Larger font size */
+        }
+
+        /* Fix Dropdown Menu Position */
+        .dropdown-menu {
+            position: absolute !important;  /* Ensure it is positioned correctly */
+            top: 100%; /* Align below the "Filter Events" button */
+            left: 0;  /* Align with the dropdown toggle button */
+            z-index: 1050; /* Ensure dropdown is on top */
+        }
+
+        .hero-section {
+            background-image: url('/images/excited-crowd.jpg');
+            background-size: cover;
+            color: white;
+            height: 45vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center; /* Center text */
+        }
+
+        .filter-sort-section {
+            margin: 20px 0;
+        }
+
         .event-img {
-            object-fit: cover;
-            height: 300px;
             width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column; /* Stack content vertically */
+            justify-content: space-between; /* Ensure the content is spaced properly */
+        }
+
+        .card-body .card-title {
+            flex-grow: 1; /* Allow the title to take up remaining space */
+            margin-bottom: 10px; /* Add margin between the title and the date/price */
+            overflow: visible; /* Ensure full title is shown */
+        }
+
+        .card-body .card-text {
+            display: flex;
+            justify-content: space-between; /* Align the date and price horizontally */
+            margin-bottom: 5px;
+        }
+
+        .card-body .card-text span {
+            display: inline-block;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem; /* Smaller font size for mobile */
+            }
+
+            .nav-item {
+                font-size: 0.9rem; /* Adjust font size for nav items */
+            }
+
+            .hero-section h1 {
+                font-size: 2rem; /* Adjust font size for smaller screens */
+            }
+
+            .card-body {
+                height: auto; /* Allow more space for content on small screens */
+            }
+
+            .event-img {
+                height: 150px; /* Smaller images on small screens */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.2rem; /* Even smaller font size for very small screens */
+            }
+
+            .nav-item {
+                font-size: 0.8rem; /* Further reduced font size */
+            }
+
+            .hero-section h1 {
+                font-size: 1.5rem; /* Adjust further for very small screens */
+            }
+
+            .event-img {
+                height: 120px; /* Even smaller images on very small screens */
+            }
         }
 
         .btn-custom {
@@ -55,16 +145,39 @@
             max-width: 1200px;
         }
 
-        /* Ensure image scaling */
-        .event-img {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-        }
-
         /* Adjust card padding on small screens */
         .event-details .card-body {
             padding: 1rem;
+        }
+
+        html, body {
+            height: 100%; /* Make the body take full height */
+            margin: 0; /* Remove default margin */
+            display: flex; /* Use flexbox for layout */
+            flex-direction: column; /* Arrange content vertically */
+        }
+
+        .container {
+            flex-grow: 1; /* This allows the container to take remaining space */
+        }
+
+        /* Footer styles */
+        footer {
+            font-size: 0.9rem;
+            margin-top: auto; /* Pushes the footer to the bottom */
+        }
+
+        footer h5 {
+            font-weight: bold;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        footer a:hover {
+            color: #007bff;
         }
     </style>
 
@@ -126,9 +239,8 @@
                     <div class="card shadow-lg event-details">
                         <div class="card-body">
                             <!-- Event Name -->
-                            <div class="d-flex justify-content-between mb-3">
-                                <h3 class="card-title">Event Name:</h3>
-                                <span th:utext="${event.eventName}">Event Name</span>
+                            <div class="text-center mb-3">
+                                <h3 class="fw-bold" th:utext="${event.eventName}">Event Name</h3>
                             </div>
         
                             <!-- Event Image -->
@@ -138,35 +250,35 @@
         
                             <!-- Event Date -->
                             <div class="d-flex justify-content-between mb-3">
-                                <h5>Date:</h5>
+                                <h5><strong>Date:</strong></h5>
                                 <span th:utext="${event.date}">Date of the event</span>
                             </div>
         
                             <!-- Venue Information -->
                             <div class="d-flex justify-content-between mb-3">
-                                <h5>Venue Name:</h5>
+                                <h5><strong>Venue Name:</strong></h5>
                                 <span th:utext="${event.venueName}"></span>
                             </div>
         
                             <!-- Classification -->
                             <div class="d-flex justify-content-between mb-3">
-                                <h5>Classification:</h5>
+                                <h5><strong>Classification:</strong></h5>
                                 <span th:utext="${event.classificationName}"></span>
                             </div>
         
                             <!-- Ticket Prices -->
                             <div class="d-flex justify-content-between mb-3">
-                                <h5 class="text-start">Price Range:</h5>
+                                <h5 class="text-start"><strong>Price Range:</strong></h5>
                                 <div class="text-end">
-                                    <span th:utext="${event.ticketPriceLow}"></span> 
-                                    to 
-                                    <span th:utext="${event.ticketPriceHigh}"></span>
+                                    $<span th:utext="${event.ticketPriceLow}"></span> 
+                                    - 
+                                    $<span th:utext="${event.ticketPriceHigh}"></span>
                                 </div>
                             </div>
 
                             <!-- Attraction -->
                             <div class="d-flex justify-content-between mb-3">
-                                <h5>Attraction:</h5>
+                                <h5><strong>Attraction (Artist):</strong></h5>
                                 <span th:utext="${event.attractionName}"></span>
                             </div>
 
@@ -188,6 +300,37 @@
                 </div>
             </div>
         </div>
+        <footer class="bg-light text-center text-lg-start mt-auto">
+            <div class="container p-4">
+                <div class="row">
+                    <!-- About Section -->
+                    <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">About Spot'N'Go</h5>
+                        <p>
+                            Spot'N'Go is your ultimate destination for discovering and attending exciting events. 
+                            Find your next experience and make unforgettable memories with us.
+                        </p>
+                    </div>
+        
+                    <!-- Links Section -->
+                    <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">Quick Links</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <a href="#" class="text-dark">Home</a>
+                            </li>
+                            <li>
+                                <a href="#" class="text-dark">Events</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="text-center p-3 bg-dark text-light">
+                © 2024 Spot'N'Go. All rights reserved.
+            </div>
+        </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
