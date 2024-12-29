@@ -1,6 +1,7 @@
 package sg.edu.nus.iss.Mini.Project.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -61,105 +62,99 @@ public class EventController {
         List<Event> allEvents = eventService.getAllEvent();
         List<Event> filteredEvents = new ArrayList<>();
 
-        // Apply classification filter
-        for(Event event : allEvents) {
-            if(classification == null || classification.isEmpty() || 
-                classification.equals(event.getClassificationName())) {
-                
-                filteredEvents.add(event);
-            }
-        }
-
-        // Apply search filter
-        if(searchQuery != null && !searchQuery.isEmpty()) {
-            List<Event> searchFilteredEvents = new ArrayList<>();
-            for(Event event : filteredEvents) {
-                if(event.getAttractionName() != null && 
-                   event.getAttractionName().toLowerCase().contains(searchQuery.toLowerCase())) {
-                
-                    searchFilteredEvents.add(event);
+        // Default behavior when all parameters are empty
+        if((classification == null || classification.isEmpty()) &&
+            (sortOption == null || sortOption.isEmpty()) &&
+            (searchQuery == null || searchQuery.isEmpty())) {
+            filteredEvents = allEvents; // No filters applied
+        } 
+        else {
+            // Apply classification filter
+            for(Event event : allEvents) {
+                String eventClassification = event.getClassificationName();
+                if (classification == null || classification.isEmpty() || 
+                    (eventClassification != null && classification.equalsIgnoreCase(eventClassification))) {
+                    filteredEvents.add(event);
                 }
             }
-            filteredEvents = searchFilteredEvents;
+
+            // Apply search filter
+            if(searchQuery != null && !searchQuery.isEmpty()) {
+                List<Event> searchFilteredEvents = new ArrayList<>();
+                for(Event event : filteredEvents) {
+                    if(event.getAttractionName() != null && 
+                    event.getAttractionName().toLowerCase().contains(searchQuery.toLowerCase())) {
+                        searchFilteredEvents.add(event);
+                    }
+                }
+                filteredEvents = searchFilteredEvents;
+            }
         }
 
         // Apply sorting
         if(sortOption != null && !sortOption.isEmpty()) {
             // Apply selected sort option
-            switch(sortOption) {
-                case "price-low-high":
-                    filteredEvents.sort(new Comparator<Event>() {
-                        @Override
-                        public int compare(Event e1, Event e2) {
-                            Double price1 = e1.getTicketPriceLow();
-                            Double price2 = e2.getTicketPriceLow();
-                            if(price1 == null && price2 == null) return 0;
-                            if(price1 == null) return 1; // Nulls last
-                            if(price2 == null) return -1; // Nulls last
-                            
-                            return price1.compareTo(price2);
-                        }
-                    });
-                    break;
-
-                case "price-high-low":
-                    filteredEvents.sort(new Comparator<Event>() {
-                        @Override
-                        public int compare(Event e1, Event e2) {
-                            Double price1 = e1.getTicketPriceLow();
-                            Double price2 = e2.getTicketPriceLow();
-                            if(price1 == null && price2 == null) return 0;
-                            if(price1 == null) return 1; // Nulls last
-                            if(price2 == null) return -1; // Nulls last
-                            
-                            return price2.compareTo(price1); // Reversed order
-                        }
-                    });
-                    break;
-
-                case "name-a-z":
-                    filteredEvents.sort(new Comparator<Event>() {
-                        @Override
-                        public int compare(Event e1, Event e2) {
-                            String name1 = e1.getAttractionName();
-                            String name2 = e2.getAttractionName();
-                            if(name1 == null && name2 == null) return 0;
-                            if(name1 == null) return 1; // Nulls last
-                            if(name2 == null) return -1; // Nulls last
-                            
-                            return name1.compareToIgnoreCase(name2);
-                        }
-                    });
-                    break;
-
-                case "name-z-a":
-                    filteredEvents.sort(new Comparator<Event>() {
-                        @Override
-                        public int compare(Event e1, Event e2) {
-                            String name1 = e1.getAttractionName();
-                            String name2 = e2.getAttractionName();
-                            if(name1 == null && name2 == null) return 0;
-                            if(name1 == null) return 1; // Nulls last
-                            if(name2 == null) return -1; // Nulls last
-                            
-                            return name2.compareToIgnoreCase(name1); // Reversed order
-                        }
-                    });
-                    break;
-
-                default:
-                    break;
+            if(sortOption.equals("price-low-high")) {
+                Collections.sort(filteredEvents, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event e1, Event e2) {
+                        Double price1 = e1.getTicketPriceLow();
+                        Double price2 = e2.getTicketPriceLow();
+                        if(price1 == null && price2 == null) return 0;
+                        if(price1 == null) return 1; // Nulls last
+                        if(price2 == null) return -1; // Nulls last
+                        return price1.compareTo(price2);
+                    }
+                });
+            } 
+            else if(sortOption.equals("price-high-low")) {
+                Collections.sort(filteredEvents, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event e1, Event e2) {
+                        Double price1 = e1.getTicketPriceLow();
+                        Double price2 = e2.getTicketPriceLow();
+                        if(price1 == null && price2 == null) return 0;
+                        if(price1 == null) return 1; // Nulls last
+                        if(price2 == null) return -1; // Nulls last
+                        return price2.compareTo(price1); // Reversed order
+                    }
+                });
+            } 
+            else if(sortOption.equals("name-a-z")) {
+                Collections.sort(filteredEvents, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event e1, Event e2) {
+                        String name1 = e1.getAttractionName();
+                        String name2 = e2.getAttractionName();
+                        if(name1 == null && name2 == null) return 0;
+                        if(name1 == null) return 1; // Nulls last
+                        if(name2 == null) return -1; // Nulls last
+                        return name1.compareToIgnoreCase(name2);
+                    }
+                });
+            } 
+            else if(sortOption.equals("name-z-a")) {
+                Collections.sort(filteredEvents, new Comparator<Event>() {
+                    @Override
+                    public int compare(Event e1, Event e2) {
+                        String name1 = e1.getAttractionName();
+                        String name2 = e2.getAttractionName();
+                        if(name1 == null && name2 == null) return 0;
+                        if(name1 == null) return 1; // Nulls last
+                        if(name2 == null) return -1; // Nulls last
+                        return name2.compareToIgnoreCase(name1); // Reversed order
+                    }
+                });
             }
         } 
         else {
             // Default sorting by date (closest first) if no sort option is selected
-            filteredEvents.sort(new Comparator<Event>() {
+            Collections.sort(filteredEvents, new Comparator<Event>() {
                 @Override
                 public int compare(Event e1, Event e2) {
                     if(e1.getDate() == null && e2.getDate() == null) return 0;
                     if(e1.getDate() == null) return 1; // Nulls last
                     if(e2.getDate() == null) return -1; // Nulls last
-                    
                     return e1.getDate().compareTo(e2.getDate());
                 }
             });
@@ -168,6 +163,7 @@ public class EventController {
         // Add data to the model
         model.addAttribute("events", filteredEvents);
         model.addAttribute("classifications", getAvailableClassifications(allEvents));
+        model.addAttribute("classification", classification);
         model.addAttribute("sortOption", sortOption);
         model.addAttribute("searchQuery", searchQuery);
 
@@ -184,4 +180,5 @@ public class EventController {
         }
         return classifications;
     }
+
 }
