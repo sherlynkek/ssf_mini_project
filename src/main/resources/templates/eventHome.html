@@ -98,7 +98,7 @@
 
     <!-- Filter and Sort Section -->
     <div class="container filter-sort-section">
-        <form id="sortForm" th:action="@{/filter}" method="get" class="row g-3 align-items-center">
+        <form id="sortForm" th:action="@{/event/filter}" method="get" class="row g-3 align-items-center">
             <input type="hidden" name="searchQuery" th:value="${searchQuery}">
             <input type="hidden" name="classification" th:value="${classification}">
             
