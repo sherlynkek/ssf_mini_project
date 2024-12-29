@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>sg.edu.nus.iss</groupId>
-	<artifactId>Mini-Project</artifactId>
+	<artifactId>mini-project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Mini-Project</name>
+	<name>mini-project</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

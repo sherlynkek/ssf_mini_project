@@ -1,36 +1,26 @@
-FROM openjdk:23-jdk AS compiler
+# the base image with JDK use to build and run your java application
+FROM eclipse-temurin:23-jdk
 
-ARG COMPILE_DIR=/code_folder
+ARG APP_DIR=/APP
 
-WORKDIR ${COMPILE_DIR}
+# directory where your source code will reside
+# directory where you copy your project to (in the next step)
+WORKDIR ${APP_DIR}
 
-COPY .mvn .mvn
-COPY src src
+# copy the required files and/or directories into the image
 COPY pom.xml .
 COPY mvnw .
 COPY mvnw.cmd .
+COPY src src
+COPY .mvn .mvn
 
-RUN chmod a+x ./mvnw
-
-RUN ./mvnw clean package -Dmaven.tests.skip=true
-
-ENV SERVER_PORT 3000
-
-EXPOSE ${SERVER_PORT}
-
-# run application using ENTRYPOINT or CMD
-ENTRYPOINT java -jar target/Mini-Project-0.0.1-SNAPSHOT.jar
-
-FROM openjdk:23-jdk
-
-ARG DEPLOY_DIR=/app
-
-WORKDIR ${DEPLOY_DIR}
-
-COPY --from=compiler /code_folder/target/Mini_project-0.0.1-SNAPSHOT.jar Mini-Project.jar
+# package the application using the RUN directive
+# this will download the dependencies defined in pom.xml
+# compile and package to jar
+RUN chmod a+x ./mvnw && ./mvnw package -Dmaven.test.skip=true
 
 ENV SERVER_PORT=3000
 
 EXPOSE ${SERVER_PORT}
 
-ENTRYPOINT [ "java", "-jar", "Mini-Project.jar" ]
+ENTRYPOINT SERVER_PORT=${SERVER_PORT} java -jar target/mini-project-0.0.1-SNAPSHOT.jar
