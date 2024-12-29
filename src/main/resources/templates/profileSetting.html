@@ -55,7 +55,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="/event/home">Spot'N'Go</a>
-            <div class="collapse navbar-collapse">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item" th:if="${session.loggedInUser == null}">
                         <a class="nav-link active" href="/event/home">Home</a>
@@ -67,13 +70,33 @@
                         <a class="nav-link active" href="/user/login">Login</a>
                     </li>
                     <li class="nav-item" th:if="${session.loggedInUser != null}">
+                        <a class="nav-link active" href="/event/home">Home</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser != null}">
                         <a class="nav-link active" href="/user/profile">Profile</a>
                     </li>
                     <li class="nav-item" th:if="${session.loggedInUser != null}">
                         <a class="nav-link active" href="/user/logout">Logout</a>
                     </li>
+    
+                    <!-- Filter Events Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="filterDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Event Categories</a>
+                        <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                            <!-- <li><a href="/event/filter?classification=" class="dropdown-item" th:classappend="${classification == '' ? 'active' : ''}">All</a></li> -->
+                            <li><a href="/event/filter?classification=Arts+%26+Theatre" class="dropdown-item" th:classappend="${classification == 'Arts & Theatre' ? 'active' : ''}">Arts & Theatre</a></li>
+                            <li><a href="/event/filter?classification=Miscellaneous" class="dropdown-item" th:classappend="${classification == 'Miscellaneous' ? 'active' : ''}">Miscellaneous</a></li>
+                            <li><a href="/event/filter?classification=Music" class="dropdown-item" th:classappend="${classification == 'Music' ? 'active' : ''}">Music</a></li>
+                            <li><a href="/event/filter?classification=Sports" class="dropdown-item" th:classappend="${classification == 'Sports' ? 'active' : ''}">Sports</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
+    
+            <!-- Search Bar -->
+            <form class="d-flex" action="/event/filter" method="get" id="searchForm">
+                <input class="form-control me-2 search-bar" type="search" placeholder="Search by Name" name="searchQuery" onchange="submitForm()">
+            </form>
         </div>
     </nav>
 

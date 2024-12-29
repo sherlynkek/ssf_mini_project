@@ -4,137 +4,192 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<style>
-    body {
-        font-family: 'Roboto', sans-serif;
-    }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
 
-    .navbar-brand {
-        font-weight: bold;
-        font-size: 35px;
-        padding: 10px;
-        margin-left: 15px;
-    }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 35px;
+            padding: 10px;
+            margin-left: 15px;
+        }
 
-    .nav-item {
-        font-size: 15px;
-        text-transform: uppercase;
-        line-height: 4;
-        margin-right: 5px;
-    }
+        .nav-item {
+            font-size: 15px;
+            text-transform: uppercase;
+            line-height: 4;
+            margin-right: 5px;
+        }
 
-    .event-img {
-        object-fit: cover;
-        height: 300px;
-        width: 100%;
-    }
+        .event-img {
+            object-fit: cover;
+            height: 300px;
+            width: 100%;
+        }
 
-    .btn-custom {
-        margin-right: 10px;
-    }
+        .btn-custom {
+            margin-right: 10px;
+        }
 
-    .event-details .card-body {
-        padding: 2rem;
-    }
+        .event-details .card-body {
+            padding: 2rem;
+        }
 
-    .card-title {
-        font-size: 2rem;
-        font-weight: bold;
-    }
+        .card-title {
+            font-size: 2rem;
+            font-weight: bold;
+        }
 
-    .card-body p {
-        font-size: 1.1rem;
-    }
+        .card-body p {
+            font-size: 1.1rem;
+        }
 
-    .text-center img {
-        border-radius: 10px;
-    }
+        .text-center img {
+            border-radius: 10px;
+        }
 
-    .container {
-        max-width: 1200px;
-    }
-</style>
+        .container {
+            max-width: 1200px;
+        }
 
-<body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/event/home">Spot'N'Go</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item" th:if="${session.loggedInUser == null}">
-                        <a class="nav-link active" href="/event/home">Home</a>
-                    </li>
-                    <li class="nav-item" th:if="${session.loggedInUser == null}">
-                        <a class="nav-link active" href="/user/register">Register</a>
-                    </li>
-                    <li class="nav-item" th:if="${session.loggedInUser == null}">
-                        <a class="nav-link active" href="/user/login">Login</a>
-                    </li>
-                    <li class="nav-item" th:if="${session.loggedInUser != null}">
-                        <a class="nav-link active" href="/event/home">Home</a>
-                    </li>
-                    <li class="nav-item" th:if="${session.loggedInUser != null}">
-                        <a class="nav-link active" href="/user/profile">Profile</a>
-                    </li>
-                    <li class="nav-item" th:if="${session.loggedInUser != null}">
-                        <a class="nav-link active" href="/user/logout">Logout</a>
-                    </li>
-                </ul>
+        /* Ensure image scaling */
+        .event-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        /* Adjust card padding on small screens */
+        .event-details .card-body {
+            padding: 1rem;
+        }
+    </style>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/event/home">Spot'N'Go</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item" th:if="${session.loggedInUser == null}">
+                            <a class="nav-link active" href="/event/home">Home</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.loggedInUser == null}">
+                            <a class="nav-link active" href="/user/register">Register</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.loggedInUser == null}">
+                            <a class="nav-link active" href="/user/login">Login</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.loggedInUser != null}">
+                            <a class="nav-link active" href="/event/home">Home</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.loggedInUser != null}">
+                            <a class="nav-link active" href="/user/profile">Profile</a>
+                        </li>
+                        <li class="nav-item" th:if="${session.loggedInUser != null}">
+                            <a class="nav-link active" href="/user/logout">Logout</a>
+                        </li>
+        
+                        <!-- Filter Events Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="filterDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Event Categories</a>
+                            <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                                <!-- <li><a href="/event/filter?classification=" class="dropdown-item" th:classappend="${classification == '' ? 'active' : ''}">All</a></li> -->
+                                <li><a href="/event/filter?classification=Arts+%26+Theatre" class="dropdown-item" th:classappend="${classification == 'Arts & Theatre' ? 'active' : ''}">Arts & Theatre</a></li>
+                                <li><a href="/event/filter?classification=Miscellaneous" class="dropdown-item" th:classappend="${classification == 'Miscellaneous' ? 'active' : ''}">Miscellaneous</a></li>
+                                <li><a href="/event/filter?classification=Music" class="dropdown-item" th:classappend="${classification == 'Music' ? 'active' : ''}">Music</a></li>
+                                <li><a href="/event/filter?classification=Sports" class="dropdown-item" th:classappend="${classification == 'Sports' ? 'active' : ''}">Sports</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+        
+                <!-- Search Bar -->
+                <form class="d-flex" action="/event/filter" method="get" id="searchForm">
+                    <input class="form-control me-2 search-bar" type="search" placeholder="Search by Name" name="searchQuery" onchange="submitForm()">
+                </form>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Event Details</h2>
+        <div class="container my-5">
+            <h2 class="text-center mb-4">Event Details</h2>
+        
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8">
+                    <!-- Event Details Card -->
+                    <div class="card shadow-lg event-details">
+                        <div class="card-body">
+                            <!-- Event Name -->
+                            <div class="d-flex justify-content-between mb-3">
+                                <h3 class="card-title">Event Name:</h3>
+                                <span th:utext="${event.eventName}">Event Name</span>
+                            </div>
+        
+                            <!-- Event Image -->
+                            <div class="text-center mb-3">
+                                <img th:src="${event.imageUrl}" alt="Event Image" class="img-fluid event-img">
+                            </div>
+        
+                            <!-- Event Date -->
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>Date:</h5>
+                                <span th:utext="${event.date}">Date of the event</span>
+                            </div>
+        
+                            <!-- Venue Information -->
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>Venue Name:</h5>
+                                <span th:utext="${event.venueName}"></span>
+                            </div>
+        
+                            <!-- Classification -->
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>Classification:</h5>
+                                <span th:utext="${event.classificationName}"></span>
+                            </div>
+        
+                            <!-- Ticket Prices -->
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5 class="text-start">Price Range:</h5>
+                                <div class="text-end">
+                                    <span th:utext="${event.ticketPriceLow}"></span> 
+                                    to 
+                                    <span th:utext="${event.ticketPriceHigh}"></span>
+                                </div>
+                            </div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <!-- Event Details Card -->
-                <div class="card shadow-lg event-details">
-                    <div class="card-body">
-                        <!-- Event Name -->
-                        <h3 class="card-title mb-3" th:utext="${event.eventName}">Event Name</h3>
+                            <!-- Attraction -->
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>Attraction:</h5>
+                                <span th:utext="${event.attractionName}"></span>
+                            </div>
 
-                        <!-- Event Image -->
-                        <div class="text-center mb-3">
-                            <img th:src="${event.imageUrl}" alt="Event Image" class="img-fluid event-img">
+                            <!-- Ticket URL, Venue URL, and Interested Button -->
+                            <div class="d-flex justify-content-center gap-3 mb-3">
+                                <!-- Buy Tickets Button -->
+                                <a th:if="${event.ticketUrl != null}" th:href="${event.ticketUrl}" class="btn btn-success" target="_blank">Buy Tickets</a>
+
+                                <!-- Visit Venue Button -->
+                                <a th:if="${event.venueUrl != null}" th:href="${event.venueUrl}" class="btn btn-primary" target="_blank">Visit Venue</a>
+
+                                <!-- Interested Button -->
+                                <form th:action="@{/user/interest/{eventId}(eventId=${event.id})}" method="post">
+                                    <button type="submit" class="btn btn-danger">Interested</button>
+                                </form>
+                            </div>
                         </div>
-
-                        <!-- Event Date -->
-                        <p><strong>Date:</strong> <span th:utext="${event.date}">Date of the event</span></p>
-
-                        <!-- Venue Information -->
-                        <div class="mb-3">
-                            <p><strong>Venue Name:</strong> <span th:utext="${event.venueName}"></span></p>
-                            <a th:if="${event.venueUrl != null}" th:href="${event.venueUrl}" class="btn btn-primary" target="_blank">Visit Venue</a>
-                        </div>
-
-                        <!-- Classification -->
-                        <p><strong>Classification:</strong> <span th:utext="${event.classificationName}"></span></p>
-
-                        <!-- Ticket Prices -->
-                        <p><strong>Price Range:</strong> <span th:utext="${event.ticketPriceLow}"></span> to 
-                           <span th:utext="${event.ticketPriceHigh}"></span>
-                        </p>
-
-                        <!-- Ticket URL -->
-                        <a th:if="${event.ticketUrl != null}" th:href="${event.ticketUrl}" class="btn btn-success mb-3" target="_blank">Buy Tickets</a>
-
-                        <!-- Attraction -->
-                        <p><strong>Attraction:</strong> <span th:utext="${event.attractionName}"></span></p>
-
-                        <!-- Interested Button -->
-                        <form th:action="@{/user/interest/{eventId}(eventId=${event.id})}" method="post">
-                            <button type="submit" class="btn btn-outline-danger">Interested</button>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </body>
+
 </html>

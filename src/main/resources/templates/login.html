@@ -27,16 +27,14 @@
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <!-- Brand and Logo -->
             <a class="navbar-brand" href="/event/home">Spot'N'Go</a>
-
-            <!-- Navbar Links -->
-            <div class="collapse navbar-collapse">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <!-- Registration and Login Buttons (only when logged out) -->
                     <li class="nav-item" th:if="${session.loggedInUser == null}">
                         <a class="nav-link active" href="/event/home">Home</a>
                     </li>
@@ -44,44 +42,36 @@
                         <a class="nav-link active" href="/user/register">Register</a>
                     </li>
                     <li class="nav-item" th:if="${session.loggedInUser == null}">
-                        <a class="nav-link active" aria-current="page" href="/user/login">Login</a>  
+                        <a class="nav-link active" href="/user/login">Login</a>
                     </li>
-
-                    <!-- Profile and Logout Buttons (only when logged in) -->
                     <li class="nav-item" th:if="${session.loggedInUser != null}">
-                        <a class="nav-link active" aria-current="page" href="/event/home">Home</a>
+                        <a class="nav-link active" href="/event/home">Home</a>
                     </li>
                     <li class="nav-item" th:if="${session.loggedInUser != null}">
                         <a class="nav-link active" href="/user/profile">Profile</a>
                     </li>
                     <li class="nav-item" th:if="${session.loggedInUser != null}">
-                        <a class="nav-link active" href="/user/logout">Logout</a>  
+                        <a class="nav-link active" href="/user/logout">Logout</a>
+                    </li>
+    
+                    <!-- Filter Events Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="filterDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Event Categories</a>
+                        <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                            <!-- <li><a href="/event/filter?classification=" class="dropdown-item" th:classappend="${classification == '' ? 'active' : ''}">All</a></li> -->
+                            <li><a href="/event/filter?classification=Arts+%26+Theatre" class="dropdown-item" th:classappend="${classification == 'Arts & Theatre' ? 'active' : ''}">Arts & Theatre</a></li>
+                            <li><a href="/event/filter?classification=Miscellaneous" class="dropdown-item" th:classappend="${classification == 'Miscellaneous' ? 'active' : ''}">Miscellaneous</a></li>
+                            <li><a href="/event/filter?classification=Music" class="dropdown-item" th:classappend="${classification == 'Music' ? 'active' : ''}">Music</a></li>
+                            <li><a href="/event/filter?classification=Sports" class="dropdown-item" th:classappend="${classification == 'Sports' ? 'active' : ''}">Sports</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
-            <div class="container my-5">
-                <h1 class="text-center mb-4">Login</h1>
-
-                <!-- Display the error message if it exists -->
-                
-
-                <form action="/user/login" method="post" class="w-50 mx-auto">
-                    <div th:if="${message}" class="alert alert-danger">
-                        <p th:text="${message}"></p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username:</label>
-                        <input type="text" id="username" name="username" class="form-control" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password:</label>
-                        <input type="password" id="password" name="password" class="form-control" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </form>
-            </div>
+    
+            <!-- Search Bar -->
+            <form class="d-flex" action="/event/filter" method="get" id="searchForm">
+                <input class="form-control me-2 search-bar" type="search" placeholder="Search by Name" name="searchQuery" onchange="submitForm()">
+            </form>
         </div>
     </nav>
 
